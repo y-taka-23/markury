@@ -4,7 +4,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-module Markury.Model where
+module Web.Markury.Model where
 
 import Database.Persist.TH
 import Data.Text ( Text )

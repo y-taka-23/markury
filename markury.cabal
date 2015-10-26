@@ -15,7 +15,7 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Markury.Model
+  exposed-modules:     Web.Markury.Model
   build-depends:       base >= 4.7 && < 5
                      , persistent-template
                      , text
