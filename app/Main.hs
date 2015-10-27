@@ -1,4 +1,6 @@
 module Main where
 
+import Web.Markury ( runMarkury )
+
 main :: IO ()
-main = putStrLn "Hello, Markury!"
+main = runMarkury
