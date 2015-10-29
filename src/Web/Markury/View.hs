@@ -42,3 +42,40 @@ bookmarksView = docTypeHtml $ do
                         li "next >"
                     p "1 of 1"
         footer $ ""
+
+usersView :: Html
+usersView = docTypeHtml $ do
+    head $ do
+        title "Markury - Simple Bookmarker"
+    body $ do
+        nav $ do
+            ul $ do
+                li $ h1 "Users"
+            section $ do
+                ul $ do
+                    li "Documentation"
+                    li "API"
+        section $ do
+            nav $ do
+                ul $ do
+                    li "Actions"
+                    li "New User"
+                    li "List Bookmarks"
+                    li "New Bookmark"
+            div $ do
+                h3 "Users"
+                table $ do
+                    thead $ do
+                        th "Id"
+                        th "Email"
+                        th "Password"
+                        th "Created"
+                        th "Modified"
+                        th "Actions"
+                    tbody ""
+                div $ do
+                    ul $ do
+                        li "< previous"
+                        li "next >"
+                    p "1 of 1"
+        footer $ ""
