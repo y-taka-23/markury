@@ -12,9 +12,22 @@ import Data.Time ( UTCTime )
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 Bookmark
-    title       Text
+    userId UserId
+    title Text
     description Text Maybe
-    url         Text
-    created     UTCTime
-    modified    UTCTime
+    url Text
+    created UTCTime
+    modified UTCTime
+User
+    email Text
+    password Text
+    created UTCTime
+    modified UTCTime
+Tag
+    title Text
+    created UTCTime
+    modified UTCTime
+BookmarkTag
+    bookmarkId BookmarkId
+    tagId TagId
 |]
