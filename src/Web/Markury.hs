@@ -5,7 +5,9 @@ module Web.Markury where
 import Web.Markury.View
 import Web.Markury.Model
 
+import Web.Spock.Digestive ( runForm )
 import Web.Spock.Safe
+import Text.Digestive.Bootstrap ( renderForm )
 import Text.Blaze.Html.Renderer.Utf8 ( renderHtml )
 import Control.Monad.IO.Class ( liftIO )
 import Control.Monad.Logger ( NoLoggingT, runNoLoggingT )
@@ -17,7 +19,6 @@ import Data.Time ( getCurrentTime )
 
 runMarkury :: IO ()
 runMarkury = do
-    ct <- liftIO getCurrentTime
     pool <- runNoLoggingT $ createSqlitePool "markury.db" 5
     runNoLoggingT $ runSqlPool (runMigration migrateAll) pool
     runSpock 8080 $ spock (defaultSpockCfg Nothing (PCPool pool) Nothing) $ do
@@ -30,6 +31,14 @@ runMarkury = do
         get "tags" $ do
             allTags <- runSql $ selectList [] [Asc TagCreated]
             lazyBytes $ renderHtml $ tagsView allTags
+        get "tags/add" $ do
+            now <- liftIO getCurrentTime
+            f <- runForm "addTag" $ tagForm now now
+            case f of
+                (view, Nothing) -> do
+                    lazyBytes $ renderHtml $ renderForm tagFormSpec view
+                (view, Just newTag) -> do
+                    lazyBytes $ renderHtml $ renderForm tagFormSpec view
 
 runSql :: (HasSpock m, SpockConn m ~ SqlBackend) => SqlPersistT (NoLoggingT (ResourceT IO)) a -> m a
 runSql action = runQuery $ \conn -> runResourceT $ runNoLoggingT $ runSqlConn action conn

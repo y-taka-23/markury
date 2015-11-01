@@ -20,9 +20,12 @@ library
                      , Web.Markury.View
   build-depends:       base >= 4.7 && < 5
                      , Spock >=0.7.9
+                     , Spock-digestive
                      , persistent
                      , persistent-template
                      , persistent-sqlite
+                     , digestive-functors
+                     , digestive-bootstrap
                      , monad-logger
                      , transformers
                      , resourcet
