@@ -20,7 +20,12 @@ library
                      , Web.Markury.View
   build-depends:       base >= 4.7 && < 5
                      , Spock >=0.7.9
+                     , persistent
                      , persistent-template
+                     , persistent-sqlite
+                     , monad-logger
+                     , transformers
+                     , resourcet
                      , text
                      , time
                      , blaze-html

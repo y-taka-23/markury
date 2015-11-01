@@ -1,11 +1,15 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Web.Markury.View where
 
-import Prelude hiding ( head, div )
-import Text.Blaze.XHtml5
+import Web.Markury.Model
 
-bookmarksView :: Html
-bookmarksView = docTypeHtml $ do
+import Prelude hiding ( head, div )
+import Text.Blaze.XHtml5 hiding ( Tag )
+import Database.Persist
+import Control.Monad
+
+bookmarksView :: [Entity Bookmark] -> Html
+bookmarksView bookmarks = docTypeHtml $ do
     head $ do
         title "Markury - Simple Bookmarker"
     body $ do
@@ -29,13 +33,15 @@ bookmarksView = docTypeHtml $ do
                 h3 "Bookmarks"
                 table $ do
                     thead $ do
-                        th "Id"
-                        th "User"
                         th "Title"
                         th "Created"
                         th "Modified"
                         th "Actions"
-                    tbody ""
+                    tbody $ forM_ bookmarks $ \bookmark -> do
+                        tr $ do
+                            td $ toHtml $ bookmarkTitle $ entityVal bookmark
+                            td $ toHtml $ show $ bookmarkCreated $ entityVal bookmark
+                            td $ toHtml $ show $ bookmarkModified $ entityVal bookmark
                 div $ do
                     ul $ do
                         li "< previous"
@@ -43,11 +49,8 @@ bookmarksView = docTypeHtml $ do
                     p "1 of 1"
         footer $ ""
 
-usersView :: Html
-usersView = docTypeHtml $ do
-    head $ do
-        title "Markury - Simple Bookmarker"
-    body $ do
+usersView :: [Entity User] -> Html
+usersView users = do
         nav $ do
             ul $ do
                 li $ h1 "Users"
@@ -66,13 +69,17 @@ usersView = docTypeHtml $ do
                 h3 "Users"
                 table $ do
                     thead $ do
-                        th "Id"
                         th "Email"
                         th "Password"
                         th "Created"
                         th "Modified"
                         th "Actions"
-                    tbody ""
+                    tbody $ forM_ users $ \user -> do
+                        tr $ do
+                            td $ toHtml $ userEmail $ entityVal user
+                            td $ toHtml $ userPassword $ entityVal user
+                            td $ toHtml $ show $ userCreated $ entityVal user
+                            td $ toHtml $ show $ userModified $ entityVal user
                 div $ do
                     ul $ do
                         li "< previous"
@@ -80,8 +87,8 @@ usersView = docTypeHtml $ do
                     p "1 of 1"
         footer $ ""
 
-tagsView :: Html
-tagsView = docTypeHtml $ do
+tagsView :: [Entity Tag] -> Html
+tagsView tags = docTypeHtml $ do
     head $ do
         title "Markury - Simple Bookmarker"
     body $ do
@@ -103,12 +110,15 @@ tagsView = docTypeHtml $ do
                 h3 "Tags"
                 table $ do
                     thead $ do
-                        th "Id"
                         th "Title"
                         th "Created"
                         th "Modified"
                         th "Actions"
-                    tbody ""
+                    tbody $ forM_ tags $ \tag -> do
+                        tr $ do
+                            td $ toHtml $ tagTitle $ entityVal tag
+                            td $ toHtml $ show $ tagCreated $ entityVal tag
+                            td $ toHtml $ show $ tagModified $ entityVal tag
                 div $ do
                     ul $ do
                         li "< previous"
