@@ -4,12 +4,13 @@ module Web.Markury.View where
 import Web.Markury.Model
 
 import Prelude hiding ( head, div )
-import Text.Blaze.XHtml5 hiding ( Tag, text )
+import Text.Blaze.XHtml5 hiding ( Tag, text, label, form )
 import Database.Persist
 import Control.Monad
 import Data.Time
+import Data.Text hiding ( head )
 import Text.Digestive
-import Text.Digestive.Bootstrap
+import Text.Digestive.Blaze.Html5
 
 bookmarksView :: [Entity Bookmark] -> Html
 bookmarksView bookmarks = docTypeHtml $ do
@@ -135,10 +136,8 @@ tagForm created modified = Tag
     <*> "created" .: stringRead "Couldn't parse as UTCTime" (Just created)
     <*> "modified" .: stringRead "Couldn't parse as UTCTime" (Just modified)
 
-tagFormSpec :: FormMeta
-tagFormSpec = FormMeta
-    { fm_method = POST
-    , fm_target = "/tags/add"
-    , fm_elements = [ FormElement "title" (Just "Title") InputText ]
-    , fm_submitText = "Add"
-    }
+tagView :: View Html -> Text -> Html
+tagView view path = form view path $ do
+    label "title" view "Title: "
+    inputText "title" view
+    inputSubmit "Add"

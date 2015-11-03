@@ -7,7 +7,6 @@ import Web.Markury.Model
 
 import Web.Spock.Digestive ( runForm )
 import Web.Spock.Safe
-import Text.Digestive.Bootstrap ( renderForm )
 import Text.Blaze.Html.Renderer.Utf8 ( renderHtml )
 import Control.Monad.IO.Class ( liftIO )
 import Control.Monad.Logger ( NoLoggingT, runNoLoggingT )
@@ -36,8 +35,8 @@ runMarkury = do
             f <- runForm "addTag" $ tagForm now now
             case f of
                 (view, Nothing) -> do
-                    lazyBytes $ renderHtml $ renderForm tagFormSpec view
-                (view, Just newTag) -> do
+                    lazyBytes $ renderHtml $ tagView view "/tags/add"
+                (_, Just newTag) -> do
                     _ <- runSql $ insert newTag
                     redirect "/tags"
 

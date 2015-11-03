@@ -25,7 +25,7 @@ library
                      , persistent-template
                      , persistent-sqlite
                      , digestive-functors
-                     , digestive-bootstrap
+                     , digestive-functors-blaze
                      , monad-logger
                      , transformers
                      , resourcet
