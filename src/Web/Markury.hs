@@ -22,23 +22,24 @@ runMarkury = do
     pool <- runNoLoggingT $ createSqlitePool "markury.db" 5
     runNoLoggingT $ runSqlPool (runMigration migrateAll) pool
     runSpock 8080 $ spock (defaultSpockCfg Nothing (PCPool pool) Nothing) $ do
-        get "bookmarks" $ do
+        get "/bookmarks" $ do
             allBookmarks <- runSql $ selectList [] [Asc BookmarkCreated]
             lazyBytes $ renderHtml $ bookmarksView allBookmarks
-        get "users" $ do
+        get "/users" $ do
             allUsers <- runSql $ selectList [] [Asc UserCreated]
             lazyBytes $ renderHtml $ usersView allUsers
-        get "tags" $ do
+        get "/tags" $ do
             allTags <- runSql $ selectList [] [Asc TagCreated]
             lazyBytes $ renderHtml $ tagsView allTags
-        get "tags/add" $ do
+        getpost "/tags/add" $ do
             now <- liftIO getCurrentTime
             f <- runForm "addTag" $ tagForm now now
             case f of
                 (view, Nothing) -> do
                     lazyBytes $ renderHtml $ renderForm tagFormSpec view
                 (view, Just newTag) -> do
-                    lazyBytes $ renderHtml $ renderForm tagFormSpec view
+                    _ <- runSql $ insert newTag
+                    redirect "/tags"
 
 runSql :: (HasSpock m, SpockConn m ~ SqlBackend) => SqlPersistT (NoLoggingT (ResourceT IO)) a -> m a
 runSql action = runQuery $ \conn -> runResourceT $ runNoLoggingT $ runSqlConn action conn
