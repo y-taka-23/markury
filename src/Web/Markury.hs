@@ -27,6 +27,15 @@ runMarkury = do
         get "/users" $ do
             allUsers <- runSql $ selectList [] [Asc UserCreated]
             lazyBytes $ renderHtml $ usersView allUsers
+        getpost "/users/add" $ do
+            now <- liftIO getCurrentTime
+            f <- runForm "addUser" $ userForm now now
+            case f of
+                (view, Nothing) -> do
+                    lazyBytes $ renderHtml $ userView view "/users/add"
+                (_, Just newUser) -> do
+                    _ <- runSql $ insert newUser
+                    redirect "/users"
         get "/tags" $ do
             allTags <- runSql $ selectList [] [Asc TagCreated]
             lazyBytes $ renderHtml $ tagsView allTags

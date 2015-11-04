@@ -130,6 +130,21 @@ tagsView tags = docTypeHtml $ do
                     p "1 of 1"
         footer $ ""
 
+userForm :: Monad m => UTCTime -> UTCTime -> Form Html m User
+userForm created modified = User
+    <$> "email" .: text Nothing
+    <*> "password" .: text Nothing
+    <*> "created" .: stringRead "Couldn't parse as UTCTime" (Just created)
+    <*> "modified" .: stringRead "Couldn't parse as UTCTime" (Just modified)
+
+userView :: View Html -> Text -> Html
+userView view path = form view path $ do
+    label "email" view "Email: "
+    inputText "email" view
+    label "password" view "Password: "
+    inputText "password" view
+    inputSubmit "Add"
+
 tagForm :: Monad m => UTCTime -> UTCTime -> Form Html m Tag
 tagForm created modified = Tag
     <$> "title" .: text Nothing
