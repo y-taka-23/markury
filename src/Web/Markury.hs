@@ -24,6 +24,15 @@ runMarkury = do
         get "/bookmarks" $ do
             allBookmarks <- runSql $ selectList [] [Asc BookmarkCreated]
             lazyBytes $ renderHtml $ bookmarksView allBookmarks
+        getpost "/bookmarks/add" $ do
+            now <- liftIO getCurrentTime
+            f <- runForm "addBookmark" $ bookmarkForm now now
+            case f of
+                (view, Nothing) -> do
+                    lazyBytes $ renderHtml $ bookmarkView view "/bookmarks/add"
+                (_, Just newBookmark) -> do
+                    _ <- runSql $ insert newBookmark
+                    redirect "/bookmarks"
         get "/users" $ do
             allUsers <- runSql $ selectList [] [Asc UserCreated]
             lazyBytes $ renderHtml $ usersView allUsers

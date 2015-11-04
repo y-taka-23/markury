@@ -130,6 +130,24 @@ tagsView tags = docTypeHtml $ do
                     p "1 of 1"
         footer $ ""
 
+bookmarkForm :: Monad m => UTCTime -> UTCTime -> Form Html m Bookmark
+bookmarkForm created modified = Bookmark
+    <$> "title" .: text Nothing
+    <*> "description" .: optionalText Nothing
+    <*> "url" .: text Nothing
+    <*> "created" .: stringRead "Couldn't parse as UTCTime" (Just created)
+    <*> "modified" .: stringRead "Couldn't parse as UTCTime" (Just modified)
+
+bookmarkView :: View Html -> Text -> Html
+bookmarkView view path = form view path $ do
+    label "title" view "Title: "
+    inputText "title" view
+    label "description" view "Description: "
+    inputText "description" view
+    label "url" view "URL: "
+    inputText "url" view
+    inputSubmit "Add"
+
 userForm :: Monad m => UTCTime -> UTCTime -> Form Html m User
 userForm created modified = User
     <$> "email" .: text Nothing

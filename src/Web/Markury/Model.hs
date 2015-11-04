@@ -12,7 +12,6 @@ import Data.Time ( UTCTime )
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 Bookmark
-    userId UserId
     title Text
     description Text Maybe
     url Text
