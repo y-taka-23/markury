@@ -12,8 +12,8 @@ import Data.Text hiding ( head )
 import Text.Digestive
 import Text.Digestive.Blaze.Html5
 
-bookmarksView :: [Entity Bookmark] -> Html
-bookmarksView bookmarks = docTypeHtml $ do
+bookmarkListView :: [Entity Bookmark] -> Html
+bookmarkListView bookmarks = docTypeHtml $ do
     head $ do
         title "Markury - Simple Bookmarker"
     body $ do
@@ -53,8 +53,8 @@ bookmarksView bookmarks = docTypeHtml $ do
                     p "1 of 1"
         footer $ ""
 
-usersView :: [Entity User] -> Html
-usersView users = do
+userListView :: [Entity User] -> Html
+userListView users = do
         nav $ do
             ul $ do
                 li $ h1 "Users"
@@ -91,8 +91,8 @@ usersView users = do
                     p "1 of 1"
         footer $ ""
 
-tagsView :: [Entity Tag] -> Html
-tagsView tags = docTypeHtml $ do
+tagListView :: [Entity Tag] -> Html
+tagListView tags = docTypeHtml $ do
     head $ do
         title "Markury - Simple Bookmarker"
     body $ do
@@ -130,16 +130,16 @@ tagsView tags = docTypeHtml $ do
                     p "1 of 1"
         footer $ ""
 
-bookmarkForm :: Monad m => UTCTime -> UTCTime -> Form Html m Bookmark
-bookmarkForm created modified = Bookmark
+bookmarkAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m Bookmark
+bookmarkAddForm created modified = Bookmark
     <$> "title" .: text Nothing
     <*> "description" .: optionalText Nothing
     <*> "url" .: text Nothing
     <*> "created" .: stringRead "Couldn't parse as UTCTime" (Just created)
     <*> "modified" .: stringRead "Couldn't parse as UTCTime" (Just modified)
 
-bookmarkView :: View Html -> Text -> Html
-bookmarkView view path = form view path $ do
+bookmarkAddView :: View Html -> Text -> Html
+bookmarkAddView view path = form view path $ do
     label "title" view "Title: "
     inputText "title" view
     label "description" view "Description: "
@@ -148,29 +148,29 @@ bookmarkView view path = form view path $ do
     inputText "url" view
     inputSubmit "Add"
 
-userForm :: Monad m => UTCTime -> UTCTime -> Form Html m User
-userForm created modified = User
+userAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m User
+userAddForm created modified = User
     <$> "email" .: text Nothing
     <*> "password" .: text Nothing
     <*> "created" .: stringRead "Couldn't parse as UTCTime" (Just created)
     <*> "modified" .: stringRead "Couldn't parse as UTCTime" (Just modified)
 
-userView :: View Html -> Text -> Html
-userView view path = form view path $ do
+userAddView :: View Html -> Text -> Html
+userAddView view path = form view path $ do
     label "email" view "Email: "
     inputText "email" view
     label "password" view "Password: "
     inputText "password" view
     inputSubmit "Add"
 
-tagForm :: Monad m => UTCTime -> UTCTime -> Form Html m Tag
-tagForm created modified = Tag
+tagAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m Tag
+tagAddForm created modified = Tag
     <$> "title" .: text Nothing
     <*> "created" .: stringRead "Couldn't parse as UTCTime" (Just created)
     <*> "modified" .: stringRead "Couldn't parse as UTCTime" (Just modified)
 
-tagView :: View Html -> Text -> Html
-tagView view path = form view path $ do
+tagAddView :: View Html -> Text -> Html
+tagAddView view path = form view path $ do
     label "title" view "Title: "
     inputText "title" view
     inputSubmit "Add"

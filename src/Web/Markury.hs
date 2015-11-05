@@ -23,37 +23,37 @@ runMarkury = do
     runSpock 8080 $ spock (defaultSpockCfg Nothing (PCPool pool) Nothing) $ do
         get "/bookmarks" $ do
             allBookmarks <- runSql $ selectList [] [Asc BookmarkCreated]
-            lazyBytes $ renderHtml $ bookmarksView allBookmarks
+            lazyBytes $ renderHtml $ bookmarkListView allBookmarks
         getpost "/bookmarks/add" $ do
             now <- liftIO getCurrentTime
-            f <- runForm "addBookmark" $ bookmarkForm now now
+            f <- runForm "addBookmark" $ bookmarkAddForm now now
             case f of
                 (view, Nothing) -> do
-                    lazyBytes $ renderHtml $ bookmarkView view "/bookmarks/add"
+                    lazyBytes $ renderHtml $ bookmarkAddView view "/bookmarks/add"
                 (_, Just newBookmark) -> do
                     _ <- runSql $ insert newBookmark
                     redirect "/bookmarks"
         get "/users" $ do
             allUsers <- runSql $ selectList [] [Asc UserCreated]
-            lazyBytes $ renderHtml $ usersView allUsers
+            lazyBytes $ renderHtml $ userListView allUsers
         getpost "/users/add" $ do
             now <- liftIO getCurrentTime
-            f <- runForm "addUser" $ userForm now now
+            f <- runForm "addUser" $ userAddForm now now
             case f of
                 (view, Nothing) -> do
-                    lazyBytes $ renderHtml $ userView view "/users/add"
+                    lazyBytes $ renderHtml $ userAddView view "/users/add"
                 (_, Just newUser) -> do
                     _ <- runSql $ insert newUser
                     redirect "/users"
         get "/tags" $ do
             allTags <- runSql $ selectList [] [Asc TagCreated]
-            lazyBytes $ renderHtml $ tagsView allTags
+            lazyBytes $ renderHtml $ tagListView allTags
         getpost "/tags/add" $ do
             now <- liftIO getCurrentTime
-            f <- runForm "addTag" $ tagForm now now
+            f <- runForm "addTag" $ tagAddForm now now
             case f of
                 (view, Nothing) -> do
-                    lazyBytes $ renderHtml $ tagView view "/tags/add"
+                    lazyBytes $ renderHtml $ tagAddView view "/tags/add"
                 (_, Just newTag) -> do
                     _ <- runSql $ insert newTag
                     redirect "/tags"
