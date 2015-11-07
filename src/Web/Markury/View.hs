@@ -130,6 +130,45 @@ tagListView tags = docTypeHtml $ do
                     p "1 of 1"
         footer $ ""
 
+bookmarkView :: Entity Bookmark -> Html
+bookmarkView bookmark = docTypeHtml $ do
+    head $ do
+        title "Markury - Simple Bookmarker"
+    body $ do
+        nav $ do
+            ul $ do
+                li $ h1 "Bookmarks"
+            section $ do
+                ul $ do
+                    li "Documentation"
+                    li "API"
+        section $ do
+            nav $ do
+                ul $ do
+                    li "Actions"
+                    li "New Tag"
+                    li "Edit Bookmark"
+                    li "Delete Bookmark"
+                    li "List Bookmarks"
+                    li "New Bookmark"
+                    li "List Users"
+                    li "New User"
+                    li "List Tags"
+                    li "New Tag"
+        div $ do
+            h3 "Tags"
+            table $ do
+                tr $ do
+                    th "Title"
+                    td $ toHtml $ bookmarkTitle $ entityVal bookmark
+                tr $ do
+                    th "Created"
+                    td $ toHtml $ show $ bookmarkCreated $ entityVal bookmark
+                tr $ do
+                    th "Modified"
+                    td $ toHtml $ show $ bookmarkModified $ entityVal bookmark
+        footer $ ""
+
 bookmarkAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m Bookmark
 bookmarkAddForm created modified = Bookmark
     <$> "title" .: text Nothing
