@@ -13,7 +13,7 @@ import Data.Time ( UTCTime )
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 Bookmark
     title Text
-    description Text Maybe
+    description Text
     url Text
     created UTCTime
     modified UTCTime

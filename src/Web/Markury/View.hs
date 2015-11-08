@@ -155,24 +155,30 @@ bookmarkView bookmark = docTypeHtml $ do
                     li "New User"
                     li "List Tags"
                     li "New Tag"
-        div $ do
-            h3 "Tags"
-            table $ do
-                tr $ do
-                    th "Title"
-                    td $ toHtml $ bookmarkTitle $ entityVal bookmark
-                tr $ do
-                    th "Created"
-                    td $ toHtml $ show $ bookmarkCreated $ entityVal bookmark
-                tr $ do
-                    th "Modified"
-                    td $ toHtml $ show $ bookmarkModified $ entityVal bookmark
+            div $ do
+                h3 "Tags"
+                table $ do
+                    tr $ do
+                        th "Title"
+                        td $ toHtml $ bookmarkTitle $ entityVal bookmark
+                    tr $ do
+                        th "Created"
+                        td $ toHtml $ show $ bookmarkCreated $ entityVal bookmark
+                    tr $ do
+                        th "Modified"
+                        td $ toHtml $ show $ bookmarkModified $ entityVal bookmark
+                div $ do
+                    h4 "Description"
+                    p $ toHtml $ bookmarkDescription $ entityVal bookmark
+                div $ do
+                    h4 "Url"
+                    p $ toHtml $ bookmarkUrl $ entityVal bookmark
         footer $ ""
 
 bookmarkAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m Bookmark
 bookmarkAddForm created modified = Bookmark
     <$> "title" .: text Nothing
-    <*> "description" .: optionalText Nothing
+    <*> "description" .: text Nothing
     <*> "url" .: text Nothing
     <*> "created" .: stringRead "Couldn't parse as UTCTime" (Just created)
     <*> "modified" .: stringRead "Couldn't parse as UTCTime" (Just modified)
