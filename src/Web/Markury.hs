@@ -11,7 +11,7 @@ import Text.Blaze.Html.Renderer.Utf8 ( renderHtml )
 import Control.Monad.IO.Class ( liftIO )
 import Control.Monad.Logger ( NoLoggingT, runNoLoggingT )
 import Control.Monad.Trans.Resource ( ResourceT, runResourceT )
-import Database.Persist ( insert, selectList, SelectOpt(..), PersistValue(..) )
+import qualified Database.Persist as P
 import Database.Persist.Sql ( SqlBackend, SqlPersistT, runSqlPool, runMigration, runSqlConn )
 import Database.Persist.Sqlite ( createSqlitePool )
 import Data.Time ( getCurrentTime )
@@ -22,8 +22,8 @@ runMarkury = do
     runNoLoggingT $ runSqlPool (runMigration migrateAll) pool
     runSpock 8080 $ spock (defaultSpockCfg Nothing (PCPool pool) Nothing) $ do
         get "/bookmarks" $ do
-            allBookmarks <- runSql $ selectList [] [Asc BookmarkCreated]
-            lazyBytes $ renderHtml $ bookmarkListView allBookmarks
+            allBookmarks <- runSql $ P.selectList [] [P.Asc BookmarkCreated]
+            lazyBytes $ renderHtml $ bookmarkListView $ map P.entityVal allBookmarks
         getpost "/bookmarks/add" $ do
             now <- liftIO getCurrentTime
             f <- runForm "addBookmark" $ bookmarkAddForm now now
@@ -31,11 +31,11 @@ runMarkury = do
                 (view, Nothing) -> do
                     lazyBytes $ renderHtml $ bookmarkAddView view "/bookmarks/add"
                 (_, Just newBookmark) -> do
-                    _ <- runSql $ insert newBookmark
+                    _ <- runSql $ P.insert newBookmark
                     redirect "/bookmarks"
         get "/users" $ do
-            allUsers <- runSql $ selectList [] [Asc UserCreated]
-            lazyBytes $ renderHtml $ userListView allUsers
+            allUsers <- runSql $ P.selectList [] [P.Asc UserCreated]
+            lazyBytes $ renderHtml $ userListView $ map P.entityVal allUsers
         getpost "/users/add" $ do
             now <- liftIO getCurrentTime
             f <- runForm "addUser" $ userAddForm now now
@@ -43,11 +43,11 @@ runMarkury = do
                 (view, Nothing) -> do
                     lazyBytes $ renderHtml $ userAddView view "/users/add"
                 (_, Just newUser) -> do
-                    _ <- runSql $ insert newUser
+                    _ <- runSql $ P.insert newUser
                     redirect "/users"
         get "/tags" $ do
-            allTags <- runSql $ selectList [] [Asc TagCreated]
-            lazyBytes $ renderHtml $ tagListView allTags
+            allTags <- runSql $ P.selectList [] [P.Asc TagCreated]
+            lazyBytes $ renderHtml $ tagListView $ map P.entityVal allTags
         getpost "/tags/add" $ do
             now <- liftIO getCurrentTime
             f <- runForm "addTag" $ tagAddForm now now
@@ -55,7 +55,7 @@ runMarkury = do
                 (view, Nothing) -> do
                     lazyBytes $ renderHtml $ tagAddView view "/tags/add"
                 (_, Just newTag) -> do
-                    _ <- runSql $ insert newTag
+                    _ <- runSql $ P.insert newTag
                     redirect "/tags"
 
 runSql :: (HasSpock m, SpockConn m ~ SqlBackend) => SqlPersistT (NoLoggingT (ResourceT IO)) a -> m a

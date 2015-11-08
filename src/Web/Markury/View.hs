@@ -5,14 +5,13 @@ import Web.Markury.Model
 
 import Prelude hiding ( head, div )
 import Text.Blaze.XHtml5 hiding ( Tag, text, label, form )
-import Database.Persist
 import Control.Monad
 import Data.Time
 import Data.Text hiding ( head )
 import Text.Digestive
 import Text.Digestive.Blaze.Html5
 
-bookmarkListView :: [Entity Bookmark] -> Html
+bookmarkListView :: [Bookmark] -> Html
 bookmarkListView bookmarks = docTypeHtml $ do
     head $ do
         title "Markury - Simple Bookmarker"
@@ -43,9 +42,9 @@ bookmarkListView bookmarks = docTypeHtml $ do
                         th "Actions"
                     tbody $ forM_ bookmarks $ \bookmark -> do
                         tr $ do
-                            td $ toHtml $ bookmarkTitle $ entityVal bookmark
-                            td $ toHtml $ show $ bookmarkCreated $ entityVal bookmark
-                            td $ toHtml $ show $ bookmarkModified $ entityVal bookmark
+                            td $ toHtml $ bookmarkTitle bookmark
+                            td $ toHtml $ show $ bookmarkCreated bookmark
+                            td $ toHtml $ show $ bookmarkModified bookmark
                 div $ do
                     ul $ do
                         li "< previous"
@@ -53,7 +52,7 @@ bookmarkListView bookmarks = docTypeHtml $ do
                     p "1 of 1"
         footer $ ""
 
-userListView :: [Entity User] -> Html
+userListView :: [User] -> Html
 userListView users = do
         nav $ do
             ul $ do
@@ -80,10 +79,10 @@ userListView users = do
                         th "Actions"
                     tbody $ forM_ users $ \user -> do
                         tr $ do
-                            td $ toHtml $ userEmail $ entityVal user
-                            td $ toHtml $ userPassword $ entityVal user
-                            td $ toHtml $ show $ userCreated $ entityVal user
-                            td $ toHtml $ show $ userModified $ entityVal user
+                            td $ toHtml $ userEmail user
+                            td $ toHtml $ userPassword user
+                            td $ toHtml $ show $ userCreated user
+                            td $ toHtml $ show $ userModified user
                 div $ do
                     ul $ do
                         li "< previous"
@@ -91,7 +90,7 @@ userListView users = do
                     p "1 of 1"
         footer $ ""
 
-tagListView :: [Entity Tag] -> Html
+tagListView :: [Tag] -> Html
 tagListView tags = docTypeHtml $ do
     head $ do
         title "Markury - Simple Bookmarker"
@@ -120,9 +119,9 @@ tagListView tags = docTypeHtml $ do
                         th "Actions"
                     tbody $ forM_ tags $ \tag -> do
                         tr $ do
-                            td $ toHtml $ tagTitle $ entityVal tag
-                            td $ toHtml $ show $ tagCreated $ entityVal tag
-                            td $ toHtml $ show $ tagModified $ entityVal tag
+                            td $ toHtml $ tagTitle tag
+                            td $ toHtml $ show $ tagCreated tag
+                            td $ toHtml $ show $ tagModified tag
                 div $ do
                     ul $ do
                         li "< previous"
@@ -130,7 +129,7 @@ tagListView tags = docTypeHtml $ do
                     p "1 of 1"
         footer $ ""
 
-bookmarkView :: Entity Bookmark -> Html
+bookmarkView :: Bookmark -> Html
 bookmarkView bookmark = docTypeHtml $ do
     head $ do
         title "Markury - Simple Bookmarker"
@@ -160,19 +159,19 @@ bookmarkView bookmark = docTypeHtml $ do
                 table $ do
                     tr $ do
                         th "Title"
-                        td $ toHtml $ bookmarkTitle $ entityVal bookmark
+                        td $ toHtml $ bookmarkTitle bookmark
                     tr $ do
                         th "Created"
-                        td $ toHtml $ show $ bookmarkCreated $ entityVal bookmark
+                        td $ toHtml $ show $ bookmarkCreated bookmark
                     tr $ do
                         th "Modified"
-                        td $ toHtml $ show $ bookmarkModified $ entityVal bookmark
+                        td $ toHtml $ show $ bookmarkModified bookmark
                 div $ do
                     h4 "Description"
-                    p $ toHtml $ bookmarkDescription $ entityVal bookmark
+                    p $ toHtml $ bookmarkDescription bookmark
                 div $ do
                     h4 "Url"
-                    p $ toHtml $ bookmarkUrl $ entityVal bookmark
+                    p $ toHtml $ bookmarkUrl bookmark
         footer $ ""
 
 bookmarkAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m Bookmark
