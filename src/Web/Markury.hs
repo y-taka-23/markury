@@ -24,6 +24,11 @@ runMarkury = do
         get "/bookmarks" $ do
             allBookmarks <- runSql $ P.selectList [] [P.Asc BookmarkCreated]
             lazyBytes $ renderHtml $ bookmarkListView $ map P.entityVal allBookmarks
+        get ("/bookmarks/view" <//> var ) $ \id -> do
+            mBookmark <- runSql $ P.get $ BookmarkKey id
+            case mBookmark of
+                Just bookmark -> lazyBytes $ renderHtml $ bookmarkView bookmark
+                Nothing -> redirect "/bookmarks"
         getpost "/bookmarks/add" $ do
             now <- liftIO getCurrentTime
             f <- runForm "addBookmark" $ bookmarkAddForm now now
