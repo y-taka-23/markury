@@ -12,7 +12,7 @@ import Control.Monad.IO.Class ( liftIO )
 import Control.Monad.Logger ( NoLoggingT, runNoLoggingT )
 import Control.Monad.Trans.Resource ( ResourceT, runResourceT )
 import qualified Database.Persist as P
-import Database.Persist.Sql ( SqlBackend, SqlPersistT, runSqlPool, runMigration, runSqlConn )
+import Database.Persist.Sql ( SqlBackend, SqlPersistT, runSqlPool, runMigration, runSqlConn, unSqlBackendKey )
 import Database.Persist.Sqlite ( createSqlitePool )
 import Data.Time ( getCurrentTime )
 
@@ -41,6 +41,11 @@ runMarkury = do
         get "/users" $ do
             allUsers <- runSql $ P.selectList [] [P.Asc UserCreated]
             lazyBytes $ renderHtml $ userListView $ map P.entityVal allUsers
+        get ("/users/view" <//> var ) $ \id -> do
+            mUser <- runSql $ P.get $ UserKey id
+            case mUser of
+                Just user -> lazyBytes $ renderHtml $ userView (unSqlBackendKey id) user
+                Nothing -> redirect "/users"
         getpost "/users/add" $ do
             now <- liftIO getCurrentTime
             f <- runForm "addUser" $ userAddForm now now

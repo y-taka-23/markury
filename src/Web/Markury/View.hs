@@ -174,6 +174,47 @@ bookmarkView bookmark = docTypeHtml $ do
                     p $ toHtml $ bookmarkUrl bookmark
         footer $ ""
 
+userView :: Show i => i -> User -> Html
+userView id user = docTypeHtml $ do
+    head $ do
+        title "Markury - Simple Bookmarker"
+    body $ do
+        nav $ do
+            ul $ do
+                li $ h1 "Users"
+            section $ do
+                ul $ do
+                    li "Documentation"
+                    li "API"
+        section $ do
+            nav $ do
+                ul $ do
+                    li "Actions"
+                    li "Edit User"
+                    li "Delete User"
+                    li "List Users"
+                    li "List Bookmarks"
+                    li "New Bookmark"
+            div $ do
+                h3 $ toHtml $ show id
+                table $ do
+                    tr $ do
+                        th "Email"
+                        td $ toHtml $ userEmail user
+                    tr $ do
+                        th "Password"
+                        td $ toHtml $ userPassword user
+                    tr $ do
+                        th "Id"
+                        td $ toHtml $ show id
+                    tr $ do
+                        th "Created"
+                        td $ toHtml $ show $ userCreated user
+                    tr $ do
+                        th "Modified"
+                        td $ toHtml $ show $ userModified user
+        footer $ ""
+
 bookmarkAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m Bookmark
 bookmarkAddForm created modified = Bookmark
     <$> "title" .: text Nothing
