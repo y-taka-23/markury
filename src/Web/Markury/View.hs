@@ -215,6 +215,44 @@ userView id user = docTypeHtml $ do
                         td $ toHtml $ show $ userModified user
         footer $ ""
 
+tagView :: Show i => i -> Tag -> Html
+tagView id tag = docTypeHtml $ do
+    head $ do
+        title "Markury - Simple Bookmarker"
+    body $ do
+        nav $ do
+            ul $ do
+                li $ h1 "Tags"
+            section $ do
+                ul $ do
+                    li "Documentation"
+                    li "API"
+        section $ do
+            nav $ do
+                ul $ do
+                    li "Actions"
+                    li "Edit Tag"
+                    li "Delete Tag"
+                    li "List Tags"
+                    li "List Bookmarks"
+                    li "New Bookmark"
+            div $ do
+                h3 $ toHtml $ tagTitle tag
+                table $ do
+                    tr $ do
+                        th "Title"
+                        td $ toHtml $ tagTitle tag
+                    tr $ do
+                        th "Id"
+                        td $ toHtml $ show id
+                    tr $ do
+                        th "Created"
+                        td $ toHtml $ show $ tagCreated tag
+                    tr $ do
+                        th "Modified"
+                        td $ toHtml $ show $ tagModified tag
+        footer $ ""
+
 bookmarkAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m Bookmark
 bookmarkAddForm created modified = Bookmark
     <$> "title" .: text Nothing

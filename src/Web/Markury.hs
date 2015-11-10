@@ -58,6 +58,11 @@ runMarkury = do
         get "/tags" $ do
             allTags <- runSql $ P.selectList [] [P.Asc TagCreated]
             lazyBytes $ renderHtml $ tagListView $ map P.entityVal allTags
+        get ("/tags/view" <//> var ) $ \id -> do
+            mTag <- runSql $ P.get $ TagKey id
+            case mTag of
+                Just tag -> lazyBytes $ renderHtml $ tagView (unSqlBackendKey id) tag
+                Nothing -> redirect "/tags"
         getpost "/tags/add" $ do
             now <- liftIO getCurrentTime
             f <- runForm "addTag" $ tagAddForm now now
