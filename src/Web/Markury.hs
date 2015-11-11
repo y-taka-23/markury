@@ -27,7 +27,7 @@ runMarkury = do
         get ("/bookmarks/view" <//> var ) $ \id -> do
             mBookmark <- runSql $ P.get $ BookmarkKey id
             case mBookmark of
-                Just bookmark -> lazyBytes $ renderHtml $ bookmarkView bookmark
+                Just bookmark -> lazyBytes $ renderHtml $ bookmarkView (unSqlBackendKey id) bookmark
                 Nothing -> redirect "/bookmarks"
         getpost "/bookmarks/add" $ do
             now <- liftIO getCurrentTime

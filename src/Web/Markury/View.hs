@@ -129,8 +129,8 @@ tagListView tags = docTypeHtml $ do
                     p "1 of 1"
         footer $ ""
 
-bookmarkView :: Bookmark -> Html
-bookmarkView bookmark = docTypeHtml $ do
+bookmarkView :: Show i => i -> Bookmark -> Html
+bookmarkView id bookmark = docTypeHtml $ do
     head $ do
         title "Markury - Simple Bookmarker"
     body $ do
@@ -145,7 +145,6 @@ bookmarkView bookmark = docTypeHtml $ do
             nav $ do
                 ul $ do
                     li "Actions"
-                    li "New Tag"
                     li "Edit Bookmark"
                     li "Delete Bookmark"
                     li "List Bookmarks"
@@ -155,11 +154,14 @@ bookmarkView bookmark = docTypeHtml $ do
                     li "List Tags"
                     li "New Tag"
             div $ do
-                h3 "Tags"
+                h3 $ toHtml $ bookmarkTitle bookmark
                 table $ do
                     tr $ do
                         th "Title"
                         td $ toHtml $ bookmarkTitle bookmark
+                    tr $ do
+                        th "Id"
+                        td $ toHtml $ show id
                     tr $ do
                         th "Created"
                         td $ toHtml $ show $ bookmarkCreated bookmark
