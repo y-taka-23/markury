@@ -26,12 +26,9 @@ bookmarkListView bookmarks = docTypeHtml $ do
         section $ do
             nav $ do
                 ul $ do
-                    li "Actions"
-                    li "New Bookmark"
-                    li "List Users"
-                    li "New User"
-                    li "List Tags"
-                    li "New Tag"
+                    li "Bookmarks"
+                    li "Users"
+                    li "Tags"
             div $ do
                 h3 "Bookmarks"
                 table $ do
@@ -64,10 +61,9 @@ userListView users = do
         section $ do
             nav $ do
                 ul $ do
-                    li "Actions"
-                    li "New User"
-                    li "List Bookmarks"
-                    li "New Bookmark"
+                    li "Bookmarks"
+                    li "Users"
+                    li "Tags"
             div $ do
                 h3 "Users"
                 table $ do
@@ -105,10 +101,9 @@ tagListView tags = docTypeHtml $ do
         section $ do
             nav $ do
                 ul $ do
-                    li "Actions"
-                    li "New Tag"
-                    li "List Bookmarks"
-                    li "New Bookmark"
+                    li "Bookmarks"
+                    li "Users"
+                    li "Tags"
             div $ do
                 h3 "Tags"
                 table $ do
@@ -144,15 +139,9 @@ bookmarkView id bookmark = docTypeHtml $ do
         section $ do
             nav $ do
                 ul $ do
-                    li "Actions"
-                    li "Edit Bookmark"
-                    li "Delete Bookmark"
-                    li "List Bookmarks"
-                    li "New Bookmark"
-                    li "List Users"
-                    li "New User"
-                    li "List Tags"
-                    li "New Tag"
+                    li "Bookmarks"
+                    li "Users"
+                    li "Tags"
             div $ do
                 h3 $ toHtml $ bookmarkTitle bookmark
                 table $ do
@@ -191,12 +180,9 @@ userView id user = docTypeHtml $ do
         section $ do
             nav $ do
                 ul $ do
-                    li "Actions"
-                    li "Edit User"
-                    li "Delete User"
-                    li "List Users"
-                    li "List Bookmarks"
-                    li "New Bookmark"
+                    li "Bookmarks"
+                    li "Users"
+                    li "Tags"
             div $ do
                 h3 $ toHtml $ show id
                 table $ do
@@ -232,12 +218,9 @@ tagView id tag = docTypeHtml $ do
         section $ do
             nav $ do
                 ul $ do
-                    li "Actions"
-                    li "Edit Tag"
-                    li "Delete Tag"
-                    li "List Tags"
-                    li "List Bookmarks"
-                    li "New Bookmark"
+                    li "Bookmarks"
+                    li "Users"
+                    li "Tags"
             div $ do
                 h3 $ toHtml $ tagTitle tag
                 table $ do
