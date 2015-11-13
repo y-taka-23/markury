@@ -6,7 +6,8 @@ import Web.Markury.Model
 import Prelude hiding ( head, div )
 import Text.Blaze.XHtml5 hiding ( Tag, text, label, form )
 import Control.Monad
-import Data.Time
+import Data.Time ( UTCTime )
+import Data.Time.Format ( FormatTime, formatTime, defaultTimeLocale )
 import Data.Text hiding ( head )
 import Text.Digestive
 import Text.Digestive.Blaze.Html5
@@ -40,8 +41,8 @@ bookmarkListView bookmarks = docTypeHtml $ do
                     tbody $ forM_ bookmarks $ \bookmark -> do
                         tr $ do
                             td $ toHtml $ bookmarkTitle bookmark
-                            td $ toHtml $ show $ bookmarkCreated bookmark
-                            td $ toHtml $ show $ bookmarkModified bookmark
+                            td $ toHtml $ showTime $ bookmarkCreated bookmark
+                            td $ toHtml $ showTime $ bookmarkModified bookmark
                 div $ do
                     ul $ do
                         li "< previous"
@@ -77,8 +78,8 @@ userListView users = do
                         tr $ do
                             td $ toHtml $ userEmail user
                             td $ toHtml $ userPassword user
-                            td $ toHtml $ show $ userCreated user
-                            td $ toHtml $ show $ userModified user
+                            td $ toHtml $ showTime $ userCreated user
+                            td $ toHtml $ showTime $ userModified user
                 div $ do
                     ul $ do
                         li "< previous"
@@ -115,8 +116,8 @@ tagListView tags = docTypeHtml $ do
                     tbody $ forM_ tags $ \tag -> do
                         tr $ do
                             td $ toHtml $ tagTitle tag
-                            td $ toHtml $ show $ tagCreated tag
-                            td $ toHtml $ show $ tagModified tag
+                            td $ toHtml $ showTime $ tagCreated tag
+                            td $ toHtml $ showTime $ tagModified tag
                 div $ do
                     ul $ do
                         li "< previous"
@@ -153,10 +154,10 @@ bookmarkView id bookmark = docTypeHtml $ do
                         td $ toHtml $ show id
                     tr $ do
                         th "Created"
-                        td $ toHtml $ show $ bookmarkCreated bookmark
+                        td $ toHtml $ showTime $ bookmarkCreated bookmark
                     tr $ do
                         th "Modified"
-                        td $ toHtml $ show $ bookmarkModified bookmark
+                        td $ toHtml $ showTime $ bookmarkModified bookmark
                 div $ do
                     h4 "Description"
                     p $ toHtml $ bookmarkDescription bookmark
@@ -197,10 +198,10 @@ userView id user = docTypeHtml $ do
                         td $ toHtml $ show id
                     tr $ do
                         th "Created"
-                        td $ toHtml $ show $ userCreated user
+                        td $ toHtml $ showTime $ userCreated user
                     tr $ do
                         th "Modified"
-                        td $ toHtml $ show $ userModified user
+                        td $ toHtml $ showTime $ userModified user
         footer $ ""
 
 tagView :: Show i => i -> Tag -> Html
@@ -232,10 +233,10 @@ tagView id tag = docTypeHtml $ do
                         td $ toHtml $ show id
                     tr $ do
                         th "Created"
-                        td $ toHtml $ show $ tagCreated tag
+                        td $ toHtml $ showTime $ tagCreated tag
                     tr $ do
                         th "Modified"
-                        td $ toHtml $ show $ tagModified tag
+                        td $ toHtml $ showTime $ tagModified tag
         footer $ ""
 
 bookmarkAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m Bookmark
@@ -282,3 +283,6 @@ tagAddView view path = form view path $ do
     label "title" view "Title: "
     inputText "title" view
     inputSubmit "Add"
+
+showTime :: FormatTime t => t -> String
+showTime = formatTime defaultTimeLocale "%D, %R"
