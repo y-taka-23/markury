@@ -5,6 +5,7 @@ import Web.Markury.Model
 
 import Prelude hiding ( head, div )
 import Text.Blaze.XHtml5 hiding ( Tag, text, label, form )
+import Text.Blaze.XHtml5.Attributes ( href )
 import Control.Monad
 import Data.Time ( UTCTime )
 import Data.Time.Format ( FormatTime, formatTime, defaultTimeLocale )
@@ -27,9 +28,9 @@ bookmarkListView bookmarks = docTypeHtml $ do
         section $ do
             nav $ do
                 ul $ do
-                    li "Bookmarks"
-                    li "Users"
-                    li "Tags"
+                    li $ a ! href "/bookmarks" $ "Bookmarks"
+                    li $ a ! href "/users" $ "Users"
+                    li $ a ! href "/tags" $ "Tags"
             div $ do
                 h3 "Bookmarks"
                 table $ do
@@ -62,9 +63,9 @@ userListView users = do
         section $ do
             nav $ do
                 ul $ do
-                    li "Bookmarks"
-                    li "Users"
-                    li "Tags"
+                    li $ a ! href "/bookmarks" $ "Bookmarks"
+                    li $ a ! href "/users" $ "Users"
+                    li $ a ! href "/tags" $ "Tags"
             div $ do
                 h3 "Users"
                 table $ do
@@ -102,9 +103,9 @@ tagListView tags = docTypeHtml $ do
         section $ do
             nav $ do
                 ul $ do
-                    li "Bookmarks"
-                    li "Users"
-                    li "Tags"
+                    li $ a ! href "/bookmarks" $ "Bookmarks"
+                    li $ a ! href "/users" $ "Users"
+                    li $ a ! href "/tags" $ "Tags"
             div $ do
                 h3 "Tags"
                 table $ do
@@ -140,9 +141,9 @@ bookmarkView id bookmark = docTypeHtml $ do
         section $ do
             nav $ do
                 ul $ do
-                    li "Bookmarks"
-                    li "Users"
-                    li "Tags"
+                    li $ a ! href "/bookmarks" $ "Bookmarks"
+                    li $ a ! href "/users" $ "Users"
+                    li $ a ! href "/tags" $ "Tags"
             div $ do
                 h3 $ toHtml $ bookmarkTitle bookmark
                 table $ do
@@ -181,9 +182,9 @@ userView id user = docTypeHtml $ do
         section $ do
             nav $ do
                 ul $ do
-                    li "Bookmarks"
-                    li "Users"
-                    li "Tags"
+                    li $ a ! href "/bookmarks" $ "Bookmarks"
+                    li $ a ! href "/users" $ "Users"
+                    li $ a ! href "/tags" $ "Tags"
             div $ do
                 h3 $ toHtml $ show id
                 table $ do
@@ -219,9 +220,9 @@ tagView id tag = docTypeHtml $ do
         section $ do
             nav $ do
                 ul $ do
-                    li "Bookmarks"
-                    li "Users"
-                    li "Tags"
+                    li $ a ! href "/bookmarks" $ "Bookmarks"
+                    li $ a ! href "/users" $ "Users"
+                    li $ a ! href "/tags" $ "Tags"
             div $ do
                 h3 $ toHtml $ tagTitle tag
                 table $ do
