@@ -26,11 +26,7 @@ bookmarkListView bookmarks = docTypeHtml $ do
                     li "Documentation"
                     li "API"
         section $ do
-            nav $ do
-                ul $ do
-                    li $ a ! href "/bookmarks" $ "Bookmarks"
-                    li $ a ! href "/users" $ "Users"
-                    li $ a ! href "/tags" $ "Tags"
+            navigationView
             div $ do
                 h3 "Bookmarks"
                 table $ do
@@ -61,11 +57,7 @@ userListView users = do
                     li "Documentation"
                     li "API"
         section $ do
-            nav $ do
-                ul $ do
-                    li $ a ! href "/bookmarks" $ "Bookmarks"
-                    li $ a ! href "/users" $ "Users"
-                    li $ a ! href "/tags" $ "Tags"
+            navigationView
             div $ do
                 h3 "Users"
                 table $ do
@@ -101,11 +93,7 @@ tagListView tags = docTypeHtml $ do
                     li "Documentation"
                     li "API"
         section $ do
-            nav $ do
-                ul $ do
-                    li $ a ! href "/bookmarks" $ "Bookmarks"
-                    li $ a ! href "/users" $ "Users"
-                    li $ a ! href "/tags" $ "Tags"
+            navigationView
             div $ do
                 h3 "Tags"
                 table $ do
@@ -139,11 +127,7 @@ bookmarkView id bookmark = docTypeHtml $ do
                     li "Documentation"
                     li "API"
         section $ do
-            nav $ do
-                ul $ do
-                    li $ a ! href "/bookmarks" $ "Bookmarks"
-                    li $ a ! href "/users" $ "Users"
-                    li $ a ! href "/tags" $ "Tags"
+            navigationView
             div $ do
                 h3 $ toHtml $ bookmarkTitle bookmark
                 table $ do
@@ -180,11 +164,7 @@ userView id user = docTypeHtml $ do
                     li "Documentation"
                     li "API"
         section $ do
-            nav $ do
-                ul $ do
-                    li $ a ! href "/bookmarks" $ "Bookmarks"
-                    li $ a ! href "/users" $ "Users"
-                    li $ a ! href "/tags" $ "Tags"
+            navigationView
             div $ do
                 h3 $ toHtml $ show id
                 table $ do
@@ -218,11 +198,7 @@ tagView id tag = docTypeHtml $ do
                     li "Documentation"
                     li "API"
         section $ do
-            nav $ do
-                ul $ do
-                    li $ a ! href "/bookmarks" $ "Bookmarks"
-                    li $ a ! href "/users" $ "Users"
-                    li $ a ! href "/tags" $ "Tags"
+            navigationView
             div $ do
                 h3 $ toHtml $ tagTitle tag
                 table $ do
@@ -239,6 +215,14 @@ tagView id tag = docTypeHtml $ do
                         th "Modified"
                         td $ toHtml $ showTime $ tagModified tag
         footer $ ""
+
+navigationView :: Html
+navigationView =
+    nav $ do
+        ul $ do
+            li $ a ! href "/bookmarks" $ "Bookmarks"
+            li $ a ! href "/users" $ "Users"
+            li $ a ! href "/tags" $ "Tags"
 
 bookmarkAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m Bookmark
 bookmarkAddForm created modified = Bookmark
