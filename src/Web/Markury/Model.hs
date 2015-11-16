@@ -29,4 +29,5 @@ Tag
 BookmarkTag
     bookmarkId BookmarkId
     tagId TagId
+    UniqueBookmarkTag bookmarkId tagId
 |]
