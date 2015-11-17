@@ -8,6 +8,7 @@ import Web.Markury.Model
 import Web.Spock.Digestive ( runForm )
 import Web.Spock.Safe
 import Text.Blaze.Html.Renderer.Utf8 ( renderHtml )
+import Control.Monad ( forM_ )
 import Control.Monad.IO.Class ( liftIO )
 import Control.Monad.Logger ( NoLoggingT, runNoLoggingT )
 import Control.Monad.Trans.Resource ( ResourceT, runResourceT )
@@ -36,7 +37,11 @@ runMarkury = do
                 (view, Nothing) -> do
                     lazyBytes $ renderHtml $ bookmarkAddView view "/bookmarks/add"
                 (_, Just newBookmark) -> do
-                    _ <- runSql $ P.insert newBookmark
+                    bookmarkId <- runSql $ P.insert newBookmark
+                    tags <- runSql $ P.selectList [TagTitle P.<-. []] []
+                    forM_ (map P.entityKey tags) $ \tagId -> do
+                        _ <- runSql $ P.insert $ BookmarkTag bookmarkId tagId
+                        return ()
                     redirect "/bookmarks"
         get "/users" $ do
             allUsers <- runSql $ P.selectList [] [P.Asc UserCreated]
