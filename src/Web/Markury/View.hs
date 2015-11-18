@@ -45,7 +45,6 @@ bookmarkListView bookmarks = docTypeHtml $ do
                         li "< previous"
                         li "next >"
                     p "1 of 1"
-        footer $ ""
 
 userListView :: [User] -> Html
 userListView users = do
@@ -78,7 +77,6 @@ userListView users = do
                         li "< previous"
                         li "next >"
                     p "1 of 1"
-        footer $ ""
 
 tagListView :: [Tag] -> Html
 tagListView tags = docTypeHtml $ do
@@ -112,7 +110,6 @@ tagListView tags = docTypeHtml $ do
                         li "< previous"
                         li "next >"
                     p "1 of 1"
-        footer $ ""
 
 bookmarkView :: Show i => i -> Bookmark -> Html
 bookmarkView id bookmark = docTypeHtml $ do
@@ -149,7 +146,6 @@ bookmarkView id bookmark = docTypeHtml $ do
                 div $ do
                     h4 "Url"
                     p $ toHtml $ bookmarkUrl bookmark
-        footer $ ""
 
 userView :: Show i => i -> User -> Html
 userView id user = docTypeHtml $ do
@@ -183,7 +179,6 @@ userView id user = docTypeHtml $ do
                     tr $ do
                         th "Modified"
                         td $ toHtml $ showTime $ userModified user
-        footer $ ""
 
 tagView :: Show i => i -> Tag -> Html
 tagView id tag = docTypeHtml $ do
@@ -214,7 +209,6 @@ tagView id tag = docTypeHtml $ do
                     tr $ do
                         th "Modified"
                         td $ toHtml $ showTime $ tagModified tag
-        footer $ ""
 
 navigationView :: Html
 navigationView =
