@@ -40,11 +40,7 @@ bookmarkListView bookmarks = docTypeHtml $ do
                             td $ toHtml $ bookmarkTitle bookmark
                             td $ toHtml $ showTime $ bookmarkCreated bookmark
                             td $ toHtml $ showTime $ bookmarkModified bookmark
-                div $ do
-                    ul $ do
-                        li "< previous"
-                        li "next >"
-                    p "1 of 1"
+                pagenationView
 
 userListView :: [User] -> Html
 userListView users = do
@@ -72,11 +68,7 @@ userListView users = do
                             td $ toHtml $ userPassword user
                             td $ toHtml $ showTime $ userCreated user
                             td $ toHtml $ showTime $ userModified user
-                div $ do
-                    ul $ do
-                        li "< previous"
-                        li "next >"
-                    p "1 of 1"
+                pagenationView
 
 tagListView :: [Tag] -> Html
 tagListView tags = docTypeHtml $ do
@@ -105,11 +97,7 @@ tagListView tags = docTypeHtml $ do
                             td $ toHtml $ tagTitle tag
                             td $ toHtml $ showTime $ tagCreated tag
                             td $ toHtml $ showTime $ tagModified tag
-                div $ do
-                    ul $ do
-                        li "< previous"
-                        li "next >"
-                    p "1 of 1"
+                pagenationView
 
 bookmarkView :: Show i => i -> Bookmark -> Html
 bookmarkView id bookmark = docTypeHtml $ do
@@ -217,6 +205,14 @@ navigationView =
             li $ a ! href "/bookmarks" $ "Bookmarks"
             li $ a ! href "/users" $ "Users"
             li $ a ! href "/tags" $ "Tags"
+
+pagenationView :: Html
+pagenationView =
+    div $ do
+        ul $ do
+            li "< previous"
+            li "next >"
+        p "1 of 1"
 
 bookmarkAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m Bookmark
 bookmarkAddForm created modified = Bookmark
