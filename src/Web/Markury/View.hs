@@ -13,8 +13,8 @@ import Data.Text hiding ( head )
 import Text.Digestive
 import Text.Digestive.Blaze.Html5
 
-bookmarkListView :: [Bookmark] -> Html
-bookmarkListView bookmarks = docTypeHtml $ do
+bookmarkListView :: [Bookmark] -> Int -> Int -> Html
+bookmarkListView bookmarks curr all = docTypeHtml $ do
     head $ do
         title "Markury - Simple Bookmarker"
     body $ do
@@ -40,10 +40,10 @@ bookmarkListView bookmarks = docTypeHtml $ do
                             td $ toHtml $ bookmarkTitle bookmark
                             td $ toHtml $ showTime $ bookmarkCreated bookmark
                             td $ toHtml $ showTime $ bookmarkModified bookmark
-                pagenationView
+                pagenationView curr all
 
-userListView :: [User] -> Html
-userListView users = do
+userListView :: [User] -> Int -> Int -> Html
+userListView users curr all = do
         nav $ do
             ul $ do
                 li $ h1 "Users"
@@ -68,10 +68,10 @@ userListView users = do
                             td $ toHtml $ userPassword user
                             td $ toHtml $ showTime $ userCreated user
                             td $ toHtml $ showTime $ userModified user
-                pagenationView
+                pagenationView curr all
 
-tagListView :: [Tag] -> Html
-tagListView tags = docTypeHtml $ do
+tagListView :: [Tag] -> Int -> Int -> Html
+tagListView tags curr all = docTypeHtml $ do
     head $ do
         title "Markury - Simple Bookmarker"
     body $ do
@@ -97,7 +97,7 @@ tagListView tags = docTypeHtml $ do
                             td $ toHtml $ tagTitle tag
                             td $ toHtml $ showTime $ tagCreated tag
                             td $ toHtml $ showTime $ tagModified tag
-                pagenationView
+                pagenationView curr all
 
 bookmarkView :: Show i => i -> Bookmark -> Html
 bookmarkView id bookmark = docTypeHtml $ do
@@ -206,13 +206,13 @@ navigationView =
             li $ a ! href "/users" $ "Users"
             li $ a ! href "/tags" $ "Tags"
 
-pagenationView :: Html
-pagenationView =
-    div $ do
+pagenationView :: Int -> Int -> Html
+pagenationView curr all =
+    nav $ do
         ul $ do
             li "< previous"
             li "next >"
-        p "1 of 1"
+        p $ toHtml $ show curr ++ " of " ++ show all
 
 bookmarkAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m Bookmark
 bookmarkAddForm created modified = Bookmark

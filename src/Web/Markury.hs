@@ -24,7 +24,7 @@ runMarkury = do
     runSpock 8080 $ spock (defaultSpockCfg Nothing (PCPool pool) Nothing) $ do
         get "/bookmarks" $ do
             allBookmarks <- runSql $ P.selectList [] [P.Asc BookmarkCreated]
-            lazyBytes $ renderHtml $ bookmarkListView $ map P.entityVal allBookmarks
+            lazyBytes $ renderHtml $ bookmarkListView (map P.entityVal allBookmarks) 1 1
         get ("/bookmarks/view" <//> var ) $ \id -> do
             mBookmark <- runSql $ P.get $ BookmarkKey id
             case mBookmark of
@@ -45,7 +45,7 @@ runMarkury = do
                     redirect "/bookmarks"
         get "/users" $ do
             allUsers <- runSql $ P.selectList [] [P.Asc UserCreated]
-            lazyBytes $ renderHtml $ userListView $ map P.entityVal allUsers
+            lazyBytes $ renderHtml $ userListView (map P.entityVal allUsers) 1 1
         get ("/users/view" <//> var ) $ \id -> do
             mUser <- runSql $ P.get $ UserKey id
             case mUser of
@@ -62,7 +62,7 @@ runMarkury = do
                     redirect "/users"
         get "/tags" $ do
             allTags <- runSql $ P.selectList [] [P.Asc TagCreated]
-            lazyBytes $ renderHtml $ tagListView $ map P.entityVal allTags
+            lazyBytes $ renderHtml $ tagListView (map P.entityVal allTags) 1 1
         get ("/tags/view" <//> var ) $ \id -> do
             mTag <- runSql $ P.get $ TagKey id
             case mTag of
