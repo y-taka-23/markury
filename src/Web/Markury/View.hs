@@ -15,8 +15,7 @@ import Text.Digestive.Blaze.Html5
 
 bookmarkListView :: [Bookmark] -> Int -> Int -> Html
 bookmarkListView bookmarks curr all = docTypeHtml $ do
-    head $ do
-        title "Markury - Simple Bookmarker"
+    headerView
     body $ do
         nav $ do
             ul $ do
@@ -44,6 +43,8 @@ bookmarkListView bookmarks curr all = docTypeHtml $ do
 
 userListView :: [User] -> Int -> Int -> Html
 userListView users curr all = do
+    headerView
+    body $ do
         nav $ do
             ul $ do
                 li $ h1 "Users"
@@ -72,8 +73,7 @@ userListView users curr all = do
 
 tagListView :: [Tag] -> Int -> Int -> Html
 tagListView tags curr all = docTypeHtml $ do
-    head $ do
-        title "Markury - Simple Bookmarker"
+    headerView
     body $ do
         nav $ do
             ul $ do
@@ -101,8 +101,7 @@ tagListView tags curr all = docTypeHtml $ do
 
 bookmarkView :: Show i => i -> Bookmark -> Html
 bookmarkView id bookmark = docTypeHtml $ do
-    head $ do
-        title "Markury - Simple Bookmarker"
+    headerView
     body $ do
         nav $ do
             ul $ do
@@ -137,8 +136,7 @@ bookmarkView id bookmark = docTypeHtml $ do
 
 userView :: Show i => i -> User -> Html
 userView id user = docTypeHtml $ do
-    head $ do
-        title "Markury - Simple Bookmarker"
+    headerView
     body $ do
         nav $ do
             ul $ do
@@ -170,8 +168,7 @@ userView id user = docTypeHtml $ do
 
 tagView :: Show i => i -> Tag -> Html
 tagView id tag = docTypeHtml $ do
-    head $ do
-        title "Markury - Simple Bookmarker"
+    headerView
     body $ do
         nav $ do
             ul $ do
@@ -197,6 +194,11 @@ tagView id tag = docTypeHtml $ do
                     tr $ do
                         th "Modified"
                         td $ toHtml $ showTime $ tagModified tag
+
+headerView :: Html
+headerView =
+    head $ do
+        title "Markury - Simple Bookmarker"
 
 navigationView :: Html
 navigationView =
