@@ -17,15 +17,9 @@ bookmarkListView :: [Bookmark] -> Int -> Int -> Html
 bookmarkListView bookmarks curr all = docTypeHtml $ do
     headerView
     body $ do
-        nav $ do
-            ul $ do
-                li $ h1 "Bookmarks"
-            section $ do
-                ul $ do
-                    li "Documentation"
-                    li "API"
+        topNavigationView
         section $ do
-            navigationView
+            sideNavigationView
             div $ do
                 h3 "Bookmarks"
                 table $ do
@@ -45,15 +39,9 @@ userListView :: [User] -> Int -> Int -> Html
 userListView users curr all = do
     headerView
     body $ do
-        nav $ do
-            ul $ do
-                li $ h1 "Users"
-            section $ do
-                ul $ do
-                    li "Documentation"
-                    li "API"
+        topNavigationView
         section $ do
-            navigationView
+            sideNavigationView
             div $ do
                 h3 "Users"
                 table $ do
@@ -75,15 +63,9 @@ tagListView :: [Tag] -> Int -> Int -> Html
 tagListView tags curr all = docTypeHtml $ do
     headerView
     body $ do
-        nav $ do
-            ul $ do
-                li $ h1 "Tags"
-            section $ do
-                ul $ do
-                    li "Documentation"
-                    li "API"
+        topNavigationView
         section $ do
-            navigationView
+            sideNavigationView
             div $ do
                 h3 "Tags"
                 table $ do
@@ -103,15 +85,9 @@ bookmarkView :: Show i => i -> Bookmark -> Html
 bookmarkView id bookmark = docTypeHtml $ do
     headerView
     body $ do
-        nav $ do
-            ul $ do
-                li $ h1 "Bookmarks"
-            section $ do
-                ul $ do
-                    li "Documentation"
-                    li "API"
+        topNavigationView
         section $ do
-            navigationView
+            sideNavigationView
             div $ do
                 h3 $ toHtml $ bookmarkTitle bookmark
                 table $ do
@@ -138,15 +114,9 @@ userView :: Show i => i -> User -> Html
 userView id user = docTypeHtml $ do
     headerView
     body $ do
-        nav $ do
-            ul $ do
-                li $ h1 "Users"
-            section $ do
-                ul $ do
-                    li "Documentation"
-                    li "API"
+        topNavigationView
         section $ do
-            navigationView
+            sideNavigationView
             div $ do
                 h3 $ toHtml $ show id
                 table $ do
@@ -170,15 +140,9 @@ tagView :: Show i => i -> Tag -> Html
 tagView id tag = docTypeHtml $ do
     headerView
     body $ do
-        nav $ do
-            ul $ do
-                li $ h1 "Tags"
-            section $ do
-                ul $ do
-                    li "Documentation"
-                    li "API"
+        topNavigationView
         section $ do
-            navigationView
+            sideNavigationView
             div $ do
                 h3 $ toHtml $ tagTitle tag
                 table $ do
@@ -200,8 +164,18 @@ headerView =
     head $ do
         title "Markury - Simple Bookmarker"
 
-navigationView :: Html
-navigationView =
+topNavigationView :: Html
+topNavigationView =
+    nav $ do
+        ul $ do
+            li $ h1 "Tags"
+        section $ do
+            ul $ do
+                li "Documentation"
+                li "API"
+
+sideNavigationView :: Html
+sideNavigationView =
     nav $ do
         ul $ do
             li $ a ! href "/bookmarks" $ "Bookmarks"
