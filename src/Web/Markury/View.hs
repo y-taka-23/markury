@@ -33,7 +33,7 @@ bookmarkListView bookmarks curr all = docTypeHtml $ do
                             td $ toHtml $ bookmarkTitle bookmark
                             td $ toHtml $ showTime $ bookmarkCreated bookmark
                             td $ toHtml $ showTime $ bookmarkModified bookmark
-                pagenationView curr all
+                paginationView curr all
 
 userListView :: [User] -> Int -> Int -> Html
 userListView users curr all = do
@@ -57,7 +57,7 @@ userListView users curr all = do
                             td $ toHtml $ userPassword user
                             td $ toHtml $ showTime $ userCreated user
                             td $ toHtml $ showTime $ userModified user
-                pagenationView curr all
+                paginationView curr all
 
 tagListView :: [Tag] -> Int -> Int -> Html
 tagListView tags curr all = docTypeHtml $ do
@@ -79,7 +79,7 @@ tagListView tags curr all = docTypeHtml $ do
                             td $ toHtml $ tagTitle tag
                             td $ toHtml $ showTime $ tagCreated tag
                             td $ toHtml $ showTime $ tagModified tag
-                pagenationView curr all
+                paginationView curr all
 
 bookmarkView :: Show i => i -> Bookmark -> Html
 bookmarkView id bookmark = docTypeHtml $ do
@@ -182,8 +182,8 @@ sideNavigationView =
             li $ a ! href "/users" $ "Users"
             li $ a ! href "/tags" $ "Tags"
 
-pagenationView :: Int -> Int -> Html
-pagenationView curr all =
+paginationView :: Int -> Int -> Html
+paginationView curr all =
     nav $ do
         ul $ do
             li "< previous"
