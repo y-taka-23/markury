@@ -18,8 +18,8 @@ library
   exposed-modules:     Web.Markury
                      , Web.Markury.Model
                      , Web.Markury.View
-  build-depends:       base >= 4.7 && < 5
-                     , Spock >=0.7.9
+  build-depends:       base
+                     , Spock
                      , Spock-digestive
                      , persistent
                      , persistent-template
