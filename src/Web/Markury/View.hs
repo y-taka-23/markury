@@ -13,151 +13,130 @@ import Data.Text hiding ( head )
 import Text.Digestive
 import Text.Digestive.Blaze.Html5
 
-bookmarkListView :: [Bookmark] -> Int -> Int -> Html
-bookmarkListView bookmarks curr all = docTypeHtml $ do
+siteView :: Html -> Html
+siteView content = docTypeHtml $ do
     headerView
     body $ do
         topNavigationView
         section $ do
             sideNavigationView
-            div $ do
-                h3 "Bookmarks"
-                table $ do
-                    thead $ do
-                        th "Title"
-                        th "Created"
-                        th "Modified"
-                        th "Actions"
-                    tbody $ forM_ bookmarks $ \bookmark -> do
-                        tr $ do
-                            td $ toHtml $ bookmarkTitle bookmark
-                            td $ toHtml $ showTime $ bookmarkCreated bookmark
-                            td $ toHtml $ showTime $ bookmarkModified bookmark
-                paginationView curr all
+            content
+
+bookmarkListView :: [Bookmark] -> Int -> Int -> Html
+bookmarkListView bookmarks curr all =
+    div $ do
+        h3 "Bookmarks"
+        table $ do
+            thead $ do
+                th "Title"
+                th "Created"
+                th "Modified"
+                th "Actions"
+            tbody $ forM_ bookmarks $ \bookmark -> do
+                tr $ do
+                    td $ toHtml $ bookmarkTitle bookmark
+                    td $ toHtml $ showTime $ bookmarkCreated bookmark
+                    td $ toHtml $ showTime $ bookmarkModified bookmark
+        paginationView curr all
 
 userListView :: [User] -> Int -> Int -> Html
-userListView users curr all = do
-    headerView
-    body $ do
-        topNavigationView
-        section $ do
-            sideNavigationView
-            div $ do
-                h3 "Users"
-                table $ do
-                    thead $ do
-                        th "Email"
-                        th "Password"
-                        th "Created"
-                        th "Modified"
-                        th "Actions"
-                    tbody $ forM_ users $ \user -> do
-                        tr $ do
-                            td $ toHtml $ userEmail user
-                            td $ toHtml $ userPassword user
-                            td $ toHtml $ showTime $ userCreated user
-                            td $ toHtml $ showTime $ userModified user
-                paginationView curr all
+userListView users curr all =
+    div $ do
+        h3 "Users"
+        table $ do
+            thead $ do
+                th "Email"
+                th "Password"
+                th "Created"
+                th "Modified"
+                th "Actions"
+            tbody $ forM_ users $ \user -> do
+                tr $ do
+                    td $ toHtml $ userEmail user
+                    td $ toHtml $ userPassword user
+                    td $ toHtml $ showTime $ userCreated user
+                    td $ toHtml $ showTime $ userModified user
+        paginationView curr all
 
 tagListView :: [Tag] -> Int -> Int -> Html
-tagListView tags curr all = docTypeHtml $ do
-    headerView
-    body $ do
-        topNavigationView
-        section $ do
-            sideNavigationView
-            div $ do
-                h3 "Tags"
-                table $ do
-                    thead $ do
-                        th "Title"
-                        th "Created"
-                        th "Modified"
-                        th "Actions"
-                    tbody $ forM_ tags $ \tag -> do
-                        tr $ do
-                            td $ toHtml $ tagTitle tag
-                            td $ toHtml $ showTime $ tagCreated tag
-                            td $ toHtml $ showTime $ tagModified tag
-                paginationView curr all
+tagListView tags curr all =
+    div $ do
+        h3 "Tags"
+        table $ do
+            thead $ do
+                th "Title"
+                th "Created"
+                th "Modified"
+                th "Actions"
+            tbody $ forM_ tags $ \tag -> do
+                tr $ do
+                    td $ toHtml $ tagTitle tag
+                    td $ toHtml $ showTime $ tagCreated tag
+                    td $ toHtml $ showTime $ tagModified tag
+        paginationView curr all
 
 bookmarkView :: Show i => i -> Bookmark -> Html
-bookmarkView id bookmark = docTypeHtml $ do
-    headerView
-    body $ do
-        topNavigationView
-        section $ do
-            sideNavigationView
-            div $ do
-                h3 $ toHtml $ bookmarkTitle bookmark
-                table $ do
-                    tr $ do
-                        th "Title"
-                        td $ toHtml $ bookmarkTitle bookmark
-                    tr $ do
-                        th "Id"
-                        td $ toHtml $ show id
-                    tr $ do
-                        th "Created"
-                        td $ toHtml $ showTime $ bookmarkCreated bookmark
-                    tr $ do
-                        th "Modified"
-                        td $ toHtml $ showTime $ bookmarkModified bookmark
-                div $ do
-                    h4 "Description"
-                    p $ toHtml $ bookmarkDescription bookmark
-                div $ do
-                    h4 "Url"
-                    p $ toHtml $ bookmarkUrl bookmark
+bookmarkView id bookmark =
+    div $ do
+        h3 $ toHtml $ bookmarkTitle bookmark
+        table $ do
+            tr $ do
+                th "Title"
+                td $ toHtml $ bookmarkTitle bookmark
+            tr $ do
+                th "Id"
+                td $ toHtml $ show id
+            tr $ do
+                th "Created"
+                td $ toHtml $ showTime $ bookmarkCreated bookmark
+            tr $ do
+                th "Modified"
+                td $ toHtml $ showTime $ bookmarkModified bookmark
+        div $ do
+            h4 "Description"
+            p $ toHtml $ bookmarkDescription bookmark
+        div $ do
+            h4 "Url"
+            p $ toHtml $ bookmarkUrl bookmark
 
 userView :: Show i => i -> User -> Html
-userView id user = docTypeHtml $ do
-    headerView
-    body $ do
-        topNavigationView
-        section $ do
-            sideNavigationView
-            div $ do
-                h3 $ toHtml $ show id
-                table $ do
-                    tr $ do
-                        th "Email"
-                        td $ toHtml $ userEmail user
-                    tr $ do
-                        th "Password"
-                        td $ toHtml $ userPassword user
-                    tr $ do
-                        th "Id"
-                        td $ toHtml $ show id
-                    tr $ do
-                        th "Created"
-                        td $ toHtml $ showTime $ userCreated user
-                    tr $ do
-                        th "Modified"
-                        td $ toHtml $ showTime $ userModified user
+userView id user =
+    div $ do
+        h3 $ toHtml $ show id
+        table $ do
+            tr $ do
+                th "Email"
+                td $ toHtml $ userEmail user
+            tr $ do
+                th "Password"
+                td $ toHtml $ userPassword user
+            tr $ do
+                th "Id"
+                td $ toHtml $ show id
+            tr $ do
+                th "Created"
+                td $ toHtml $ showTime $ userCreated user
+            tr $ do
+                th "Modified"
+                td $ toHtml $ showTime $ userModified user
 
 tagView :: Show i => i -> Tag -> Html
-tagView id tag = docTypeHtml $ do
-    headerView
-    body $ do
-        topNavigationView
-        section $ do
-            sideNavigationView
-            div $ do
-                h3 $ toHtml $ tagTitle tag
-                table $ do
-                    tr $ do
-                        th "Title"
-                        td $ toHtml $ tagTitle tag
-                    tr $ do
-                        th "Id"
-                        td $ toHtml $ show id
-                    tr $ do
-                        th "Created"
-                        td $ toHtml $ showTime $ tagCreated tag
-                    tr $ do
-                        th "Modified"
-                        td $ toHtml $ showTime $ tagModified tag
+tagView id tag =
+    div $ do
+        h3 $ toHtml $ tagTitle tag
+        table $ do
+            tr $ do
+                th "Title"
+                td $ toHtml $ tagTitle tag
+            tr $ do
+                th "Id"
+                td $ toHtml $ show id
+            tr $ do
+                th "Created"
+                td $ toHtml $ showTime $ tagCreated tag
+            tr $ do
+                th "Modified"
+                td $ toHtml $ showTime $ tagModified tag
 
 headerView :: Html
 headerView =

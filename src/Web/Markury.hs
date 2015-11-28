@@ -24,11 +24,11 @@ runMarkury = do
     runSpock 8080 $ spock (defaultSpockCfg Nothing (PCPool pool) Nothing) $ do
         get "/bookmarks" $ do
             allBookmarks <- runSql $ P.selectList [] [P.Asc BookmarkCreated]
-            lazyBytes $ renderHtml $ bookmarkListView (map P.entityVal allBookmarks) 1 1
+            lazyBytes $ renderHtml $ siteView $ bookmarkListView (map P.entityVal allBookmarks) 1 1
         get ("/bookmarks/view" <//> var ) $ \id -> do
             mBookmark <- runSql $ P.get $ BookmarkKey id
             case mBookmark of
-                Just bookmark -> lazyBytes $ renderHtml $ bookmarkView (unSqlBackendKey id) bookmark
+                Just bookmark -> lazyBytes $ renderHtml $ siteView $ bookmarkView (unSqlBackendKey id) bookmark
                 Nothing -> redirect "/bookmarks"
         getpost "/bookmarks/add" $ do
             now <- liftIO getCurrentTime
@@ -45,11 +45,11 @@ runMarkury = do
                     redirect "/bookmarks"
         get "/users" $ do
             allUsers <- runSql $ P.selectList [] [P.Asc UserCreated]
-            lazyBytes $ renderHtml $ userListView (map P.entityVal allUsers) 1 1
+            lazyBytes $ renderHtml $ siteView $ userListView (map P.entityVal allUsers) 1 1
         get ("/users/view" <//> var ) $ \id -> do
             mUser <- runSql $ P.get $ UserKey id
             case mUser of
-                Just user -> lazyBytes $ renderHtml $ userView (unSqlBackendKey id) user
+                Just user -> lazyBytes $ renderHtml $ siteView $ userView (unSqlBackendKey id) user
                 Nothing -> redirect "/users"
         getpost "/users/add" $ do
             now <- liftIO getCurrentTime
@@ -62,11 +62,11 @@ runMarkury = do
                     redirect "/users"
         get "/tags" $ do
             allTags <- runSql $ P.selectList [] [P.Asc TagCreated]
-            lazyBytes $ renderHtml $ tagListView (map P.entityVal allTags) 1 1
+            lazyBytes $ renderHtml $ siteView $ tagListView (map P.entityVal allTags) 1 1
         get ("/tags/view" <//> var ) $ \id -> do
             mTag <- runSql $ P.get $ TagKey id
             case mTag of
-                Just tag -> lazyBytes $ renderHtml $ tagView (unSqlBackendKey id) tag
+                Just tag -> lazyBytes $ renderHtml $ siteView $ tagView (unSqlBackendKey id) tag
                 Nothing -> redirect "/tags"
         getpost "/tags/add" $ do
             now <- liftIO getCurrentTime
