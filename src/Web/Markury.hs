@@ -35,7 +35,7 @@ runMarkury = do
             f <- runForm "addBookmark" $ bookmarkAddForm now now
             case f of
                 (view, Nothing) -> do
-                    lazyBytes $ renderHtml $ bookmarkAddView view "/bookmarks/add"
+                    lazyBytes $ renderHtml $ siteView $ bookmarkAddView view "/bookmarks/add"
                 (_, Just newBookmark) -> do
                     bookmarkId <- runSql $ P.insert newBookmark
                     tags <- runSql $ P.selectList [TagTitle P.<-. []] []
@@ -56,7 +56,7 @@ runMarkury = do
             f <- runForm "addUser" $ userAddForm now now
             case f of
                 (view, Nothing) -> do
-                    lazyBytes $ renderHtml $ userAddView view "/users/add"
+                    lazyBytes $ renderHtml $ siteView $ userAddView view "/users/add"
                 (_, Just newUser) -> do
                     _ <- runSql $ P.insert newUser
                     redirect "/users"
@@ -73,7 +73,7 @@ runMarkury = do
             f <- runForm "addTag" $ tagAddForm now now
             case f of
                 (view, Nothing) -> do
-                    lazyBytes $ renderHtml $ tagAddView view "/tags/add"
+                    lazyBytes $ renderHtml $ siteView $ tagAddView view "/tags/add"
                 (_, Just newTag) -> do
                     _ <- runSql $ P.insert newTag
                     redirect "/tags"

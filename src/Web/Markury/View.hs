@@ -178,14 +178,16 @@ bookmarkAddForm created modified = Bookmark
     <*> "modified" .: stringRead "Couldn't parse as UTCTime" (Just modified)
 
 bookmarkAddView :: View Html -> Text -> Html
-bookmarkAddView view path = form view path $ do
-    label "title" view "Title: "
-    inputText "title" view
-    label "description" view "Description: "
-    inputText "description" view
-    label "url" view "URL: "
-    inputText "url" view
-    inputSubmit "Add"
+bookmarkAddView view path =
+    div $ do
+        form view path $ do
+            label "title" view "Title: "
+            inputText "title" view
+            label "description" view "Description: "
+            inputText "description" view
+            label "url" view "URL: "
+            inputText "url" view
+            inputSubmit "Add"
 
 userAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m User
 userAddForm created modified = User
@@ -195,12 +197,14 @@ userAddForm created modified = User
     <*> "modified" .: stringRead "Couldn't parse as UTCTime" (Just modified)
 
 userAddView :: View Html -> Text -> Html
-userAddView view path = form view path $ do
-    label "email" view "Email: "
-    inputText "email" view
-    label "password" view "Password: "
-    inputText "password" view
-    inputSubmit "Add"
+userAddView view path =
+    div $ do
+        form view path $ do
+            label "email" view "Email: "
+            inputText "email" view
+            label "password" view "Password: "
+            inputText "password" view
+            inputSubmit "Add"
 
 tagAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m Tag
 tagAddForm created modified = Tag
@@ -209,10 +213,12 @@ tagAddForm created modified = Tag
     <*> "modified" .: stringRead "Couldn't parse as UTCTime" (Just modified)
 
 tagAddView :: View Html -> Text -> Html
-tagAddView view path = form view path $ do
-    label "title" view "Title: "
-    inputText "title" view
-    inputSubmit "Add"
+tagAddView view path =
+    div $ do
+        form view path $ do
+            label "title" view "Title: "
+            inputText "title" view
+            inputSubmit "Add"
 
 showTime :: FormatTime t => t -> String
 showTime = formatTime defaultTimeLocale "%D, %R"
