@@ -147,11 +147,10 @@ topNavigationView :: Html
 topNavigationView =
     nav $ do
         ul $ do
-            li $ h1 "Tags"
+            li $ h1 "Markury"
         section $ do
             ul $ do
-                li "Documentation"
-                li "API"
+                li $ a ! href "https://github.com/y-taka-23/markury" $ "GitHub"
 
 sideNavigationView :: Html
 sideNavigationView =
