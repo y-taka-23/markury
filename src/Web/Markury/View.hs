@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Web.Markury.View where
 
-import Web.Markury.Model
+import Web.Markury.Model.DB
 
 import Prelude hiding ( head, div )
 import Text.Blaze.XHtml5 hiding ( Tag, text, label, form )

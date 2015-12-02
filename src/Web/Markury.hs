@@ -3,7 +3,7 @@
 module Web.Markury where
 
 import Web.Markury.View
-import Web.Markury.Model
+import Web.Markury.Model.DB
 
 import Web.Spock.Digestive ( runForm )
 import Web.Spock.Safe
