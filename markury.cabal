@@ -17,6 +17,7 @@ library
   hs-source-dirs:      src
   exposed-modules:     Web.Markury
                      , Web.Markury.Model.DB
+                     , Web.Markury.Model.Input
                      , Web.Markury.View
   build-depends:       base
                      , Spock

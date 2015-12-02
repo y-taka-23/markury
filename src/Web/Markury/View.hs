@@ -2,6 +2,7 @@
 module Web.Markury.View where
 
 import Web.Markury.Model.DB
+import Web.Markury.Model.Input
 
 import Prelude hiding ( head, div )
 import Text.Blaze.XHtml5 hiding ( Tag, text, label, form )
@@ -168,13 +169,12 @@ paginationView curr all =
             li "next >"
         p $ toHtml $ show curr ++ " of " ++ show all
 
-bookmarkAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m Bookmark
-bookmarkAddForm created modified = Bookmark
+bookmarkAddForm :: Monad m => Form Html m BookmarkInput
+bookmarkAddForm = BookmarkInput
     <$> "title" .: text Nothing
     <*> "description" .: text Nothing
     <*> "url" .: text Nothing
-    <*> "created" .: stringRead "Couldn't parse as UTCTime" (Just created)
-    <*> "modified" .: stringRead "Couldn't parse as UTCTime" (Just modified)
+    <*> "comma-sep-tags" .: text Nothing
 
 bookmarkAddView :: View Html -> Text -> Html
 bookmarkAddView view path =
@@ -186,6 +186,8 @@ bookmarkAddView view path =
             inputText "description" view
             label "url" view "URL: "
             inputText "url" view
+            label "comma-sep-tags" view "Tags: "
+            inputText "comma-sep-tags" view
             inputSubmit "Add"
 
 userAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m User

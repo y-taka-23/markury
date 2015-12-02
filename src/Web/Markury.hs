@@ -4,6 +4,7 @@ module Web.Markury where
 
 import Web.Markury.View
 import Web.Markury.Model.DB
+import Web.Markury.Model.Input
 
 import Web.Spock.Digestive ( runForm )
 import Web.Spock.Safe
@@ -32,17 +33,16 @@ runMarkury = do
                 Just bookmark -> renderSite $ bookmarkView (unSqlBackendKey id) bookmark
                 Nothing -> redirect "/bookmarks"
         getpost "/bookmarks/add" $ do
-            now <- liftIO getCurrentTime
-            f <- runForm "addBookmark" $ bookmarkAddForm now now
+            f <- runForm "addBookmark" bookmarkAddForm
             case f of
                 (view, Nothing) -> do
                     renderSite $ bookmarkAddView view "/bookmarks/add"
-                (_, Just newBookmark) -> do
-                    bookmarkId <- runSql $ P.insert newBookmark
-                    tags <- runSql $ P.selectList [TagTitle P.<-. []] []
-                    forM_ (map P.entityKey tags) $ \tagId -> do
-                        _ <- runSql $ P.insert $ BookmarkTag bookmarkId tagId
-                        return ()
+                (_, Just bookmarkInput) -> do
+                    let title = bookmarkInputTitle bookmarkInput
+                    let desc = bookmarkInputDescription bookmarkInput
+                    let url = bookmarkInputUrl bookmarkInput
+                    now <- liftIO getCurrentTime
+                    _ <- runSql $ P.insert $ Bookmark title desc url now now
                     redirect "/bookmarks"
         get "/users" $ do
             allUsers <- runSql $ P.selectList [] [P.Asc UserCreated]
