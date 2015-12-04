@@ -8,3 +8,8 @@ data BookmarkInput = BookmarkInput
     , bookmarkInputUrl :: Text
     , bookmarkInputCommaSepTags :: Text
     }
+
+data UserInput = UserInput
+    { userInputEmail :: Text
+    , userInputPassword :: Text
+    }

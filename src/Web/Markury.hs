@@ -53,13 +53,15 @@ runMarkury = do
                 Just user -> renderSite $ userView (unSqlBackendKey id) user
                 Nothing -> redirect "/users"
         getpost "/users/add" $ do
-            now <- liftIO getCurrentTime
-            f <- runForm "addUser" $ userAddForm now now
+            f <- runForm "addUser" $ userAddForm
             case f of
                 (view, Nothing) -> do
                     renderSite $ userAddView view "/users/add"
-                (_, Just newUser) -> do
-                    _ <- runSql $ P.insert newUser
+                (_, Just userInput) -> do
+                    let email = userInputEmail userInput
+                    let password = userInputEmail userInput
+                    now <- liftIO getCurrentTime
+                    _ <- runSql $ P.insert $ User email password now now
                     redirect "/users"
         get "/tags" $ do
             allTags <- runSql $ P.selectList [] [P.Asc TagCreated]

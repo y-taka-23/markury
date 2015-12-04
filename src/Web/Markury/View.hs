@@ -190,12 +190,10 @@ bookmarkAddView view path =
             inputText "comma-sep-tags" view
             inputSubmit "Add"
 
-userAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m User
-userAddForm created modified = User
+userAddForm :: Monad m => Form Html m UserInput
+userAddForm = UserInput
     <$> "email" .: text Nothing
     <*> "password" .: text Nothing
-    <*> "created" .: stringRead "Couldn't parse as UTCTime" (Just created)
-    <*> "modified" .: stringRead "Couldn't parse as UTCTime" (Just modified)
 
 userAddView :: View Html -> Text -> Html
 userAddView view path =
