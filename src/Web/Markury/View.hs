@@ -205,11 +205,9 @@ userAddView view path =
             inputText "password" view
             inputSubmit "Add"
 
-tagAddForm :: Monad m => UTCTime -> UTCTime -> Form Html m Tag
-tagAddForm created modified = Tag
+tagAddForm :: Monad m => Form Html m TagInput
+tagAddForm = TagInput
     <$> "title" .: text Nothing
-    <*> "created" .: stringRead "Couldn't parse as UTCTime" (Just created)
-    <*> "modified" .: stringRead "Couldn't parse as UTCTime" (Just modified)
 
 tagAddView :: View Html -> Text -> Html
 tagAddView view path =

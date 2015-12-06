@@ -72,13 +72,14 @@ runMarkury = do
                 Just tag -> renderSite $ tagView (unSqlBackendKey id) tag
                 Nothing -> redirect "/tags"
         getpost "/tags/add" $ do
-            now <- liftIO getCurrentTime
-            f <- runForm "addTag" $ tagAddForm now now
+            f <- runForm "addTag" tagAddForm
             case f of
                 (view, Nothing) -> do
                     renderSite $ tagAddView view "/tags/add"
-                (_, Just newTag) -> do
-                    _ <- runSql $ P.insert newTag
+                (_, Just tagInput) -> do
+                    let title = tagInputTitle tagInput
+                    now <- liftIO getCurrentTime
+                    _ <- runSql $ P.insert $ Tag title now now
                     redirect "/tags"
 
 runSql :: (HasSpock m, SpockConn m ~ SqlBackend) => SqlPersistT (NoLoggingT (ResourceT IO)) a -> m a
