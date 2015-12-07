@@ -53,7 +53,7 @@ runMarkury = do
                 Just user -> renderSite $ userView (unSqlBackendKey id) user
                 Nothing -> redirect "/users"
         getpost "/users/add" $ do
-            f <- runForm "addUser" $ userAddForm
+            f <- runForm "addUser" userAddForm
             case f of
                 (view, Nothing) -> do
                     renderSite $ userAddView view "/users/add"
