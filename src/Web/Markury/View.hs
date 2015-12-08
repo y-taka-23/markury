@@ -174,7 +174,7 @@ bookmarkAddForm = BookmarkInput
     <$> "title" .: text Nothing
     <*> "description" .: text Nothing
     <*> "url" .: text Nothing
-    <*> "comma-sep-tags" .: text Nothing
+    <*> "tags" .: text Nothing
 
 bookmarkAddView :: View Html -> Text -> Html
 bookmarkAddView view path =
@@ -186,8 +186,8 @@ bookmarkAddView view path =
             inputText "description" view
             label "url" view "URL: "
             inputText "url" view
-            label "comma-sep-tags" view "Tags: "
-            inputText "comma-sep-tags" view
+            label "tags" view "Tags: "
+            inputText "tags" view
             inputSubmit "Add"
 
 userAddForm :: Monad m => Form Html m UserInput

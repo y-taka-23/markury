@@ -6,7 +6,7 @@ data BookmarkInput = BookmarkInput
     { bookmarkInputTitle :: Text
     , bookmarkInputDescription :: Text
     , bookmarkInputUrl :: Text
-    , bookmarkInputCommaSepTags :: Text
+    , bookmarkInputTags :: Text
     }
 
 data UserInput = UserInput
