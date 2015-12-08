@@ -17,6 +17,7 @@ import Control.Monad.Trans.Resource ( ResourceT, runResourceT )
 import qualified Database.Persist as P
 import Database.Persist.Sql ( SqlBackend, SqlPersistT, runSqlPool, runMigration, runSqlConn, unSqlBackendKey )
 import Database.Persist.Sqlite ( createSqlitePool )
+import qualified Data.Text as T
 import Data.Time ( getCurrentTime )
 
 runMarkury :: IO ()
@@ -41,8 +42,12 @@ runMarkury = do
                     let title = bookmarkInputTitle bookmarkInput
                     let desc = bookmarkInputDescription bookmarkInput
                     let url = bookmarkInputUrl bookmarkInput
+                    let concatTags = bookmarkInputTags bookmarkInput
                     now <- liftIO getCurrentTime
-                    _ <- runSql $ P.insert $ Bookmark title desc url now now
+                    bookmarkId <- runSql $ P.insert $ Bookmark title desc url now now
+                    forM_ (T.words concatTags) $ \tagTitle -> do
+                        tagId <- runSql $ P.insert $ Tag tagTitle now now
+                        _ <- runSql $ P.insert $ BookmarkTag bookmarkId tagId
                     redirect "/bookmarks"
         get "/users" $ do
             allUsers <- runSql $ P.selectList [] [P.Asc UserCreated]
