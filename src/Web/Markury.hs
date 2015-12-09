@@ -48,6 +48,7 @@ runMarkury = do
                     forM_ (T.words concatTags) $ \tagTitle -> do
                         tagId <- runSql $ P.insert $ Tag tagTitle now now
                         _ <- runSql $ P.insert $ BookmarkTag bookmarkId tagId
+                        return ()
                     redirect "/bookmarks"
         get "/users" $ do
             allUsers <- runSql $ P.selectList [] [P.Asc UserCreated]
