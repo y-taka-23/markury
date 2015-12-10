@@ -99,6 +99,18 @@ bookmarkView id bookmark tags =
         div $ do
             h4 "Url"
             p $ toHtml $ bookmarkUrl bookmark
+        div $ do
+            h4 "Related Tags"
+            table $ do
+                thead $ do
+                    th "Title"
+                    th "Created"
+                    th "Modified"
+                tbody $ forM_ tags $ \tag -> do
+                    tr $ do
+                        td $ toHtml $ tagTitle tag
+                        td $ toHtml $ showTime $ tagCreated tag
+                        td $ toHtml $ showTime $ tagModified tag
 
 userView :: Show i => i -> User -> Html
 userView id user =
