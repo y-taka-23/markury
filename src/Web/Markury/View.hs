@@ -76,8 +76,8 @@ tagListView tags curr all =
                     td $ toHtml $ showTime $ tagModified tag
         paginationView curr all
 
-bookmarkView :: Show i => i -> Bookmark -> Html
-bookmarkView id bookmark =
+bookmarkView :: Show i => i -> Bookmark -> [Tag] -> Html
+bookmarkView id bookmark tags =
     div $ do
         h3 $ toHtml $ bookmarkTitle bookmark
         table $ do

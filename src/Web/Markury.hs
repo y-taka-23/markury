@@ -31,7 +31,11 @@ runMarkury = do
         get ("/bookmarks/view" <//> var ) $ \id -> do
             mBookmark <- runSql $ P.get $ BookmarkKey id
             case mBookmark of
-                Just bookmark -> renderSite $ bookmarkView (unSqlBackendKey id) bookmark
+                Just bookmark -> do
+                    bookmarkTags <- runSql $ P.selectList [BookmarkTagBookmarkId P.==. (BookmarkKey id)] []
+                    let tagIds = map (bookmarkTagTagId . P.entityVal) bookmarkTags
+                    tags <- runSql $ P.selectList [TagId P.<-. tagIds] [P.Asc TagCreated]
+                    renderSite $ bookmarkView (unSqlBackendKey id) bookmark (map P.entityVal tags)
                 Nothing -> redirect "/bookmarks"
         getpost "/bookmarks/add" $ do
             f <- runForm "addBookmark" bookmarkAddForm
