@@ -22,6 +22,7 @@ User
     password Text
     created UTCTime
     modified UTCTime
+    UniqueEmail email
 Tag
     title Text
     created UTCTime
