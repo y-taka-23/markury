@@ -23,8 +23,8 @@ siteView content = docTypeHtml $ do
             sideNavigationView
             content
 
-bookmarkListView :: [Bookmark] -> Int -> Int -> Html
-bookmarkListView bookmarks curr all =
+bookmarkListView :: [Bookmark] -> Html
+bookmarkListView bookmarks =
     div $ do
         h3 "Bookmarks"
         table $ do
@@ -38,10 +38,9 @@ bookmarkListView bookmarks curr all =
                     td $ toHtml $ bookmarkTitle bookmark
                     td $ toHtml $ showTime $ bookmarkCreated bookmark
                     td $ toHtml $ showTime $ bookmarkModified bookmark
-        paginationView curr all
 
-userListView :: [User] -> Int -> Int -> Html
-userListView users curr all =
+userListView :: [User] -> Html
+userListView users =
     div $ do
         h3 "Users"
         table $ do
@@ -57,10 +56,9 @@ userListView users curr all =
                     td $ toHtml $ userPassword user
                     td $ toHtml $ showTime $ userCreated user
                     td $ toHtml $ showTime $ userModified user
-        paginationView curr all
 
-tagListView :: [Tag] -> Int -> Int -> Html
-tagListView tags curr all =
+tagListView :: [Tag] -> Html
+tagListView tags =
     div $ do
         h3 "Tags"
         table $ do
@@ -74,7 +72,6 @@ tagListView tags curr all =
                     td $ toHtml $ tagTitle tag
                     td $ toHtml $ showTime $ tagCreated tag
                     td $ toHtml $ showTime $ tagModified tag
-        paginationView curr all
 
 bookmarkView :: Show i => i -> Bookmark -> [Tag] -> Html
 bookmarkView id bookmark tags =
@@ -172,14 +169,6 @@ sideNavigationView =
             li $ a ! href "/bookmarks" $ "Bookmarks"
             li $ a ! href "/users" $ "Users"
             li $ a ! href "/tags" $ "Tags"
-
-paginationView :: Int -> Int -> Html
-paginationView curr all =
-    nav $ do
-        ul $ do
-            li "< previous"
-            li "next >"
-        p $ toHtml $ show curr ++ " of " ++ show all
 
 bookmarkAddForm :: Monad m => Form Html m BookmarkInput
 bookmarkAddForm = BookmarkInput
