@@ -25,9 +25,7 @@ runMarkury = do
     pool <- runNoLoggingT $ createSqlitePool "markury.db" 5
     runNoLoggingT $ runSqlPool (runMigration migrateAll) pool
     runSpock 8080 $ spock (defaultSpockCfg Nothing (PCPool pool) Nothing) $ do
-        get "/bookmarks" $ do
-            allBookmarks <- runSql $ P.selectList [] [P.Asc BookmarkCreated]
-            renderSite $ bookmarkListView (map P.entityVal allBookmarks)
+        get "/bookmarks" allBookmarksAction
         get ("/bookmarks/view" <//> var ) $ \id -> do
             mBookmark <- runSql $ P.get $ BookmarkKey id
             case mBookmark of
@@ -91,6 +89,11 @@ runMarkury = do
                     now <- liftIO getCurrentTime
                     _ <- runSql $ P.insert $ Tag title now now
                     redirect "/tags"
+
+allBookmarksAction :: ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
+allBookmarksAction = do
+    allBookmarks <- runSql $ P.selectList [] [P.Asc BookmarkCreated]
+    renderSite $ bookmarkListView (map P.entityVal allBookmarks)
 
 runSql :: (HasSpock m, SpockConn m ~ SqlBackend) => SqlPersistT (NoLoggingT (ResourceT IO)) a -> m a
 runSql action = runQuery $ \conn -> runResourceT $ runNoLoggingT $ runSqlConn action conn
