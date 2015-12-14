@@ -26,32 +26,8 @@ runMarkury = do
     runNoLoggingT $ runSqlPool (runMigration migrateAll) pool
     runSpock 8080 $ spock (defaultSpockCfg Nothing (PCPool pool) Nothing) $ do
         get "/bookmarks" allBookmarksAction
-        get ("/bookmarks/view" <//> var ) $ \id -> do
-            mBookmark <- runSql $ P.get $ BookmarkKey id
-            case mBookmark of
-                Just bookmark -> do
-                    bookmarkTags <- runSql $ P.selectList [BookmarkTagBookmarkId P.==. (BookmarkKey id)] []
-                    let tagIds = map (bookmarkTagTagId . P.entityVal) bookmarkTags
-                    tags <- runSql $ P.selectList [TagId P.<-. tagIds] [P.Asc TagCreated]
-                    renderSite $ bookmarkView (unSqlBackendKey id) bookmark (map P.entityVal tags)
-                Nothing -> redirect "/bookmarks"
-        getpost "/bookmarks/add" $ do
-            f <- runForm "addBookmark" bookmarkAddForm
-            case f of
-                (view, Nothing) -> do
-                    renderSite $ bookmarkAddView view "/bookmarks/add"
-                (_, Just bookmarkInput) -> do
-                    let title = bookmarkInputTitle bookmarkInput
-                    let desc = bookmarkInputDescription bookmarkInput
-                    let url = bookmarkInputUrl bookmarkInput
-                    let concatTags = bookmarkInputTags bookmarkInput
-                    now <- liftIO getCurrentTime
-                    bookmarkId <- runSql $ P.insert $ Bookmark title desc url now now
-                    forM_ (T.words concatTags) $ \tagTitle -> do
-                        tagId <- runSql $ P.insert $ Tag tagTitle now now
-                        _ <- runSql $ P.insert $ BookmarkTag bookmarkId tagId
-                        return ()
-                    redirect "/bookmarks"
+        get ("/bookmarks/view" <//> var) viewBookmarkAction
+        getpost "/bookmarks/add" addBookmarkAction
         get "/users" $ do
             allUsers <- runSql $ P.selectList [] [P.Asc UserCreated]
             renderSite $ userListView (map P.entityVal allUsers)
@@ -94,6 +70,36 @@ allBookmarksAction :: ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
 allBookmarksAction = do
     allBookmarks <- runSql $ P.selectList [] [P.Asc BookmarkCreated]
     renderSite $ bookmarkListView (map P.entityVal allBookmarks)
+
+addBookmarkAction :: ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
+addBookmarkAction = do
+    f <- runForm "addBookmark" bookmarkAddForm
+    case f of
+        (view, Nothing) -> do
+            renderSite $ bookmarkAddView view "/bookmarks/add"
+        (_, Just bookmarkInput) -> do
+            let title = bookmarkInputTitle bookmarkInput
+            let desc = bookmarkInputDescription bookmarkInput
+            let url = bookmarkInputUrl bookmarkInput
+            let concatTags = bookmarkInputTags bookmarkInput
+            now <- liftIO getCurrentTime
+            bookmarkId <- runSql $ P.insert $ Bookmark title desc url now now
+            forM_ (T.words concatTags) $ \tagTitle -> do
+                tagId <- runSql $ P.insert $ Tag tagTitle now now
+                _ <- runSql $ P.insert $ BookmarkTag bookmarkId tagId
+                return ()
+            redirect "/bookmarks"
+
+viewBookmarkAction :: P.BackendKey SqlBackend -> ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
+viewBookmarkAction id = do
+    mBookmark <- runSql $ P.get $ BookmarkKey id
+    case mBookmark of
+        Just bookmark -> do
+            bookmarkTags <- runSql $ P.selectList [BookmarkTagBookmarkId P.==. (BookmarkKey id)] []
+            let tagIds = map (bookmarkTagTagId . P.entityVal) bookmarkTags
+            tags <- runSql $ P.selectList [TagId P.<-. tagIds] [P.Asc TagCreated]
+            renderSite $ bookmarkView (unSqlBackendKey id) bookmark (map P.entityVal tags)
+        Nothing -> redirect "/bookmarks"
 
 runSql :: (HasSpock m, SpockConn m ~ SqlBackend) => SqlPersistT (NoLoggingT (ResourceT IO)) a -> m a
 runSql action = runQuery $ \conn -> runResourceT $ runNoLoggingT $ runSqlConn action conn
