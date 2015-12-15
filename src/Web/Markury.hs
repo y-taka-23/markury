@@ -28,43 +28,12 @@ runMarkury = do
         get "/bookmarks" allBookmarksAction
         get ("/bookmarks/view" <//> var) viewBookmarkAction
         getpost "/bookmarks/add" addBookmarkAction
-        get "/users" $ do
-            allUsers <- runSql $ P.selectList [] [P.Asc UserCreated]
-            renderSite $ userListView (map P.entityVal allUsers)
-        get ("/users/view" <//> var ) $ \id -> do
-            mUser <- runSql $ P.get $ UserKey id
-            case mUser of
-                Just user -> renderSite $ userView (unSqlBackendKey id) user
-                Nothing -> redirect "/users"
-        getpost "/users/add" $ do
-            f <- runForm "addUser" userAddForm
-            case f of
-                (view, Nothing) -> do
-                    renderSite $ userAddView view "/users/add"
-                (_, Just userInput) -> do
-                    let email = userInputEmail userInput
-                    let password = userInputEmail userInput
-                    now <- liftIO getCurrentTime
-                    _ <- runSql $ P.insert $ User email password now now
-                    redirect "/users"
-        get "/tags" $ do
-            allTags <- runSql $ P.selectList [] [P.Asc TagCreated]
-            renderSite $ tagListView (map P.entityVal allTags)
-        get ("/tags/view" <//> var ) $ \id -> do
-            mTag <- runSql $ P.get $ TagKey id
-            case mTag of
-                Just tag -> renderSite $ tagView (unSqlBackendKey id) tag
-                Nothing -> redirect "/tags"
-        getpost "/tags/add" $ do
-            f <- runForm "addTag" tagAddForm
-            case f of
-                (view, Nothing) -> do
-                    renderSite $ tagAddView view "/tags/add"
-                (_, Just tagInput) -> do
-                    let title = tagInputTitle tagInput
-                    now <- liftIO getCurrentTime
-                    _ <- runSql $ P.insert $ Tag title now now
-                    redirect "/tags"
+        get "/users" allUsersAction
+        get ("/users/view" <//> var ) viewUserAction
+        getpost "/users/add" addUserAction
+        get "/tags" allTagsAction
+        get ("/tags/view" <//> var ) viewTagAction
+        getpost "/tags/add" addTagAction
 
 allBookmarksAction :: ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
 allBookmarksAction = do
@@ -100,6 +69,55 @@ viewBookmarkAction id = do
             tags <- runSql $ P.selectList [TagId P.<-. tagIds] [P.Asc TagCreated]
             renderSite $ bookmarkView (unSqlBackendKey id) bookmark (map P.entityVal tags)
         Nothing -> redirect "/bookmarks"
+
+allUsersAction :: ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
+allUsersAction = do
+    allUsers <- runSql $ P.selectList [] [P.Asc UserCreated]
+    renderSite $ userListView (map P.entityVal allUsers)
+
+viewUserAction :: P.BackendKey SqlBackend -> ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
+viewUserAction id = do
+    mUser <- runSql $ P.get $ UserKey id
+    case mUser of
+        Just user -> renderSite $ userView (unSqlBackendKey id) user
+        Nothing -> redirect "/users"
+
+addUserAction :: ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
+addUserAction = do
+    f <- runForm "addUser" userAddForm
+    case f of
+        (view, Nothing) -> do
+            renderSite $ userAddView view "/users/add"
+        (_, Just userInput) -> do
+            let email = userInputEmail userInput
+            let password = userInputEmail userInput
+            now <- liftIO getCurrentTime
+            _ <- runSql $ P.insert $ User email password now now
+            redirect "/users"
+
+allTagsAction :: ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
+allTagsAction = do
+    allTags <- runSql $ P.selectList [] [P.Asc TagCreated]
+    renderSite $ tagListView (map P.entityVal allTags)
+
+viewTagAction :: P.BackendKey SqlBackend -> ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
+viewTagAction id = do
+    mTag <- runSql $ P.get $ TagKey id
+    case mTag of
+        Just tag -> renderSite $ tagView (unSqlBackendKey id) tag
+        Nothing -> redirect "/tags"
+
+addTagAction :: ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
+addTagAction = do
+    f <- runForm "addTag" tagAddForm
+    case f of
+        (view, Nothing) -> do
+            renderSite $ tagAddView view "/tags/add"
+        (_, Just tagInput) -> do
+            let title = tagInputTitle tagInput
+            now <- liftIO getCurrentTime
+            _ <- runSql $ P.insert $ Tag title now now
+            redirect "/tags"
 
 runSql :: (HasSpock m, SpockConn m ~ SqlBackend) => SqlPersistT (NoLoggingT (ResourceT IO)) a -> m a
 runSql action = runQuery $ \conn -> runResourceT $ runNoLoggingT $ runSqlConn action conn
