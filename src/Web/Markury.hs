@@ -29,10 +29,10 @@ runMarkury = do
         get ("/bookmarks/view" <//> var) viewBookmarkAction
         getpost "/bookmarks/add" addBookmarkAction
         get "/users" allUsersAction
-        get ("/users/view" <//> var ) viewUserAction
+        get ("/users/view" <//> var) viewUserAction
         getpost "/users/add" addUserAction
         get "/tags" allTagsAction
-        get ("/tags/view" <//> var ) viewTagAction
+        get ("/tags/view" <//> var) viewTagAction
         getpost "/tags/add" addTagAction
 
 allBookmarksAction :: ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
