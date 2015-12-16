@@ -16,6 +16,10 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Web.Markury
+                     , Web.Markury.Action.BookmarkAction
+                     , Web.Markury.Action.TagAction
+                     , Web.Markury.Action.UserAction
+                     , Web.Markury.Action.Util
                      , Web.Markury.Model.DB
                      , Web.Markury.Model.Input
                      , Web.Markury.View
