@@ -9,19 +9,10 @@ import Web.Markury.Model.DB
 import Web.Markury.Model.Input
 import Web.Markury.View
 
-import Web.Spock.Digestive ( runForm )
-import Web.Spock.Safe
-import Text.Blaze.Html ( Html )
-import Text.Blaze.Html.Renderer.Utf8 ( renderHtml )
-import Control.Monad ( forM_ )
-import Control.Monad.IO.Class ( MonadIO, liftIO )
-import Control.Monad.Logger ( NoLoggingT, runNoLoggingT )
-import Control.Monad.Trans.Resource ( ResourceT, runResourceT )
-import qualified Database.Persist as P
-import Database.Persist.Sql ( SqlBackend, SqlPersistT, runSqlPool, runMigration, runSqlConn, unSqlBackendKey )
+import Control.Monad.Logger ( runNoLoggingT )
+import Database.Persist.Sql ( runSqlPool, runMigration )
 import Database.Persist.Sqlite ( createSqlitePool )
-import qualified Data.Text as T
-import Data.Time ( getCurrentTime )
+import Web.Spock.Safe
 
 runMarkury :: IO ()
 runMarkury = do
