@@ -19,12 +19,15 @@ runMarkury = do
     pool <- runNoLoggingT $ createSqlitePool "markury.db" 5
     runNoLoggingT $ runSqlPool (runMigration migrateAll) pool
     runSpock 8080 $ spock (defaultSpockCfg Nothing (PCPool pool) Nothing) $ do
-        get "/bookmarks" allBookmarksAction
-        get ("/bookmarks/view" <//> var) viewBookmarkAction
-        getpost "/bookmarks/add" addBookmarkAction
-        get "/users" allUsersAction
-        get ("/users/view" <//> var) viewUserAction
-        getpost "/users/add" addUserAction
-        get "/tags" allTagsAction
-        get ("/tags/view" <//> var) viewTagAction
-        getpost "/tags/add" addTagAction
+        subcomponent "bookmarks" $ do
+            get root allBookmarksAction
+            get ("view" <//> var) viewBookmarkAction
+            getpost "add" addBookmarkAction
+        subcomponent "users" $ do
+            get root allUsersAction
+            get ("view" <//> var) viewUserAction
+            getpost "add" addUserAction
+        subcomponent "tags" $ do
+            get root allTagsAction
+            get ("view" <//> var) viewTagAction
+            getpost "add" addTagAction
