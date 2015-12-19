@@ -7,7 +7,6 @@ import Web.Markury.Action.TagAction
 import Web.Markury.Action.UserAction
 import Web.Markury.Model.DB
 import Web.Markury.Model.Input
-import Web.Markury.View
 
 import Control.Monad.Logger ( runNoLoggingT )
 import Database.Persist.Sql ( runSqlPool, runMigration )

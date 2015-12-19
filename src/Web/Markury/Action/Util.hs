@@ -2,7 +2,6 @@
 {-# LANGUAGE GADTs #-}
 module Web.Markury.Action.Util where
 
-import Web.Markury.View
 import Web.Markury.Model.DB
 import Web.Markury.Model.Input
 
@@ -17,5 +16,5 @@ import Web.Spock.Safe
 runSql :: (HasSpock m, SpockConn m ~ SqlBackend) => SqlPersistT (NoLoggingT (ResourceT IO)) a -> m a
 runSql action = runQuery $ \conn -> runResourceT $ runNoLoggingT $ runSqlConn action conn
 
-renderSite :: MonadIO m => Html -> ActionT m a
-renderSite = lazyBytes . renderHtml . siteView
+renderBlaze :: MonadIO m => Html -> ActionT m a
+renderBlaze = lazyBytes . renderHtml

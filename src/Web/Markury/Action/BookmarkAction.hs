@@ -5,7 +5,7 @@ module Web.Markury.Action.BookmarkAction where
 import Web.Markury.Action.Util
 import Web.Markury.Model.DB
 import Web.Markury.Model.Input
-import Web.Markury.View
+import Web.Markury.View.BookmarkView
 
 import Web.Spock.Digestive ( runForm )
 import Web.Spock.Safe
@@ -24,14 +24,14 @@ import Data.Time ( getCurrentTime )
 allBookmarksAction :: ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
 allBookmarksAction = do
     allBookmarks <- runSql $ P.selectList [] [P.Asc BookmarkCreated]
-    renderSite $ bookmarkListView (map P.entityVal allBookmarks)
+    renderBlaze $ bookmarkListView (map P.entityVal allBookmarks)
 
 addBookmarkAction :: ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
 addBookmarkAction = do
     f <- runForm "addBookmark" bookmarkAddForm
     case f of
         (view, Nothing) -> do
-            renderSite $ bookmarkAddView view "/bookmarks/add"
+            renderBlaze $ bookmarkAddView view "/bookmarks/add"
         (_, Just bookmarkInput) -> do
             let title = bookmarkInputTitle bookmarkInput
             let desc = bookmarkInputDescription bookmarkInput
@@ -53,5 +53,5 @@ viewBookmarkAction id = do
             bookmarkTags <- runSql $ P.selectList [BookmarkTagBookmarkId P.==. (BookmarkKey id)] []
             let tagIds = map (bookmarkTagTagId . P.entityVal) bookmarkTags
             tags <- runSql $ P.selectList [TagId P.<-. tagIds] [P.Asc TagCreated]
-            renderSite $ bookmarkView (unSqlBackendKey id) bookmark (map P.entityVal tags)
+            renderBlaze $ bookmarkView (unSqlBackendKey id) bookmark (map P.entityVal tags)
         Nothing -> redirect "/bookmarks"

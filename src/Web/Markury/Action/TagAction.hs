@@ -5,7 +5,7 @@ module Web.Markury.Action.TagAction where
 import Web.Markury.Action.Util
 import Web.Markury.Model.DB
 import Web.Markury.Model.Input
-import Web.Markury.View
+import Web.Markury.View.TagView
 
 import Web.Spock.Digestive ( runForm )
 import Web.Spock.Safe
@@ -24,7 +24,7 @@ import Data.Time ( getCurrentTime )
 allTagsAction :: ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
 allTagsAction = do
     allTags <- runSql $ P.selectList [] [P.Asc TagCreated]
-    renderSite $ tagListView (map P.entityVal allTags)
+    renderBlaze $ tagListView (map P.entityVal allTags)
 
 viewTagAction :: P.BackendKey SqlBackend -> ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
 viewTagAction id = do
@@ -34,7 +34,7 @@ viewTagAction id = do
             bookmarkTags <- runSql $ P.selectList [BookmarkTagTagId P.==. (TagKey id)] []
             let bookmarkIds = map (bookmarkTagBookmarkId . P.entityVal) bookmarkTags
             bookmarks <- runSql $ P.selectList [BookmarkId P.<-. bookmarkIds] [P.Asc BookmarkCreated]
-            renderSite $ tagView (unSqlBackendKey id) tag (map P.entityVal bookmarks)
+            renderBlaze $ tagView (unSqlBackendKey id) tag (map P.entityVal bookmarks)
         Nothing -> redirect "/tags"
 
 addTagAction :: ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
@@ -42,7 +42,7 @@ addTagAction = do
     f <- runForm "addTag" tagAddForm
     case f of
         (view, Nothing) -> do
-            renderSite $ tagAddView view "/tags/add"
+            renderBlaze $ tagAddView view "/tags/add"
         (_, Just tagInput) -> do
             let title = tagInputTitle tagInput
             now <- liftIO getCurrentTime

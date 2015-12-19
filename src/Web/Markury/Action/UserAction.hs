@@ -5,7 +5,7 @@ module Web.Markury.Action.UserAction where
 import Web.Markury.Action.Util
 import Web.Markury.Model.DB
 import Web.Markury.Model.Input
-import Web.Markury.View
+import Web.Markury.View.UserView
 
 import Web.Spock.Digestive ( runForm )
 import Web.Spock.Safe
@@ -24,13 +24,13 @@ import Data.Time ( getCurrentTime )
 allUsersAction :: ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
 allUsersAction = do
     allUsers <- runSql $ P.selectList [] [P.Asc UserCreated]
-    renderSite $ userListView (map P.entityVal allUsers)
+    renderBlaze $ userListView (map P.entityVal allUsers)
 
 viewUserAction :: P.BackendKey SqlBackend -> ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
 viewUserAction id = do
     mUser <- runSql $ P.get $ UserKey id
     case mUser of
-        Just user -> renderSite $ userView (unSqlBackendKey id) user
+        Just user -> renderBlaze $ userView (unSqlBackendKey id) user
         Nothing -> redirect "/users"
 
 addUserAction :: ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
@@ -38,7 +38,7 @@ addUserAction = do
     f <- runForm "addUser" userAddForm
     case f of
         (view, Nothing) -> do
-            renderSite $ userAddView view "/users/add"
+            renderBlaze $ userAddView view "/users/add"
         (_, Just userInput) -> do
             let email = userInputEmail userInput
             let password = userInputEmail userInput

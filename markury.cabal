@@ -22,7 +22,10 @@ library
                      , Web.Markury.Action.Util
                      , Web.Markury.Model.DB
                      , Web.Markury.Model.Input
-                     , Web.Markury.View
+                     , Web.Markury.View.BookmarkView
+                     , Web.Markury.View.CommonView
+                     , Web.Markury.View.TagView
+                     , Web.Markury.View.UserView
   build-depends:       base
                      , Spock
                      , Spock-digestive
