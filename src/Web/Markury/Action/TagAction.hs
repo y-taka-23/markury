@@ -30,7 +30,11 @@ viewTagAction :: P.BackendKey SqlBackend -> ActionT (WebStateM SqlBackend (Maybe
 viewTagAction id = do
     mTag <- runSql $ P.get $ TagKey id
     case mTag of
-        Just tag -> renderSite $ tagView (unSqlBackendKey id) tag
+        Just tag -> do
+            bookmarkTags <- runSql $ P.selectList [BookmarkTagTagId P.==. (TagKey id)] []
+            let bookmarkIds = map (bookmarkTagBookmarkId . P.entityVal) bookmarkTags
+            bookmarks <- runSql $ P.selectList [BookmarkId P.<-. bookmarkIds] [P.Asc BookmarkCreated]
+            renderSite $ tagView (unSqlBackendKey id) tag (map P.entityVal bookmarks)
         Nothing -> redirect "/tags"
 
 addTagAction :: ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c

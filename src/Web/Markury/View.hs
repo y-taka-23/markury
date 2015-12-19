@@ -130,8 +130,8 @@ userView id user =
                 th "Modified"
                 td $ toHtml $ showTime $ userModified user
 
-tagView :: Show i => i -> Tag -> Html
-tagView id tag =
+tagView :: Show i => i -> Tag -> [Bookmark] -> Html
+tagView id tag bookmarks =
     div $ do
         h3 $ toHtml $ tagTitle tag
         table $ do
@@ -147,6 +147,18 @@ tagView id tag =
             tr $ do
                 th "Modified"
                 td $ toHtml $ showTime $ tagModified tag
+        div $ do
+            h4 "Related Bookmarks"
+            table $ do
+                thead $ do
+                    th "Title"
+                    th "Created"
+                    th "Modified"
+                tbody $ forM_ bookmarks $ \bookmark -> do
+                    tr $ do
+                        td $ toHtml $ bookmarkTitle bookmark
+                        td $ toHtml $ showTime $ bookmarkCreated bookmark
+                        td $ toHtml $ showTime $ bookmarkModified bookmark
 
 headerView :: Html
 headerView =
