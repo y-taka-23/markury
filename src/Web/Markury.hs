@@ -31,3 +31,4 @@ runMarkury = do
             get root allTagsAction
             get ("view" <//> var) viewTagAction
             getpost "add" addTagAction
+            getpost ("delete" <//> var) deleteTagAction

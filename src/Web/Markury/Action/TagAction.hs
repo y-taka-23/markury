@@ -48,3 +48,10 @@ addTagAction = do
             now <- liftIO getCurrentTime
             _ <- runSql $ P.insert $ Tag title now now
             redirect "/tags"
+
+deleteTagAction :: P.BackendKey SqlBackend -> ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
+deleteTagAction id = do
+    let tagKey = TagKey id
+    _ <- runSql $ P.delete tagKey
+    _ <- runSql $ P.deleteWhere [BookmarkTagTagId P.==. tagKey]
+    redirect "/tags"
