@@ -45,3 +45,8 @@ addUserAction = do
             now <- liftIO getCurrentTime
             _ <- runSql $ P.insert $ User email password now now
             redirect "/users"
+
+deleteUserAction :: P.BackendKey SqlBackend -> ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
+deleteUserAction id = do
+    _ <- runSql $ P.delete $ UserKey id
+    redirect "/users"

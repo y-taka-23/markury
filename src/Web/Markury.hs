@@ -26,6 +26,7 @@ runMarkury = do
             get root allUsersAction
             get ("view" <//> var) viewUserAction
             getpost "add" addUserAction
+            getpost ("delete" <//> var) deleteUserAction
         subcomponent "tags" $ do
             get root allTagsAction
             get ("view" <//> var) viewTagAction
