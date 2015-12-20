@@ -22,6 +22,7 @@ runMarkury = do
             get root allBookmarksAction
             get ("view" <//> var) viewBookmarkAction
             getpost "add" addBookmarkAction
+            getpost ("delete" <//> var) deleteBookmarkAction
         subcomponent "users" $ do
             get root allUsersAction
             get ("view" <//> var) viewUserAction

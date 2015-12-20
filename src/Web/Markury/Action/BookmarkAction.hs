@@ -55,3 +55,10 @@ viewBookmarkAction id = do
             tags <- runSql $ P.selectList [TagId P.<-. tagIds] [P.Asc TagCreated]
             renderBlaze $ bookmarkView (unSqlBackendKey id) bookmark (map P.entityVal tags)
         Nothing -> redirect "/bookmarks"
+
+deleteBookmarkAction :: P.BackendKey SqlBackend -> ActionT (WebStateM SqlBackend (Maybe a) (Maybe b)) c
+deleteBookmarkAction id = do
+    let bookmarkKey = BookmarkKey id
+    _ <- runSql $ P.delete bookmarkKey
+    _ <- runSql $ P.deleteWhere [BookmarkTagBookmarkId P.==. bookmarkKey]
+    redirect "/bookmarks"
