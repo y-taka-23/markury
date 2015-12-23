@@ -14,7 +14,7 @@ import Text.Digestive
 import Text.Digestive.Blaze.Html5
 
 tagListView :: [Tag] -> Html
-tagListView tags =
+tagListView tags = mkSite $
     div $ do
         h3 "Tags"
         table $ do
@@ -30,7 +30,7 @@ tagListView tags =
                     td $ toHtml $ showTime $ tagModified tag
 
 tagView :: Show i => i -> Tag -> [Bookmark] -> Html
-tagView id tag bookmarks =
+tagView id tag bookmarks = mkSite $
     div $ do
         h3 $ toHtml $ tagTitle tag
         table $ do
@@ -64,7 +64,7 @@ tagAddForm = TagInput
     <$> "title" .: text Nothing
 
 tagAddView :: View Html -> Text -> Html
-tagAddView view path =
+tagAddView view path = mkSite $
     div $ do
         form view path $ do
             label "title" view "Title: "

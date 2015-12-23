@@ -14,7 +14,7 @@ import Text.Digestive
 import Text.Digestive.Blaze.Html5
 
 userListView :: [User] -> Html
-userListView users =
+userListView users = mkSite $
     div $ do
         h3 "Users"
         table $ do
@@ -32,7 +32,7 @@ userListView users =
                     td $ toHtml $ showTime $ userModified user
 
 userView :: Show i => i -> User -> Html
-userView id user =
+userView id user = mkSite $
     div $ do
         h3 $ toHtml $ show id
         table $ do
@@ -58,7 +58,7 @@ userAddForm = UserInput
     <*> "password" .: text Nothing
 
 userAddView :: View Html -> Text -> Html
-userAddView view path =
+userAddView view path = mkSite $
     div $ do
         form view path $ do
             label "email" view "Email: "

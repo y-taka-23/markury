@@ -14,7 +14,7 @@ import Text.Digestive
 import Text.Digestive.Blaze.Html5
 
 bookmarkListView :: [Bookmark] -> Html
-bookmarkListView bookmarks =
+bookmarkListView bookmarks = mkSite $
     div $ do
         h3 "Bookmarks"
         table $ do
@@ -30,7 +30,7 @@ bookmarkListView bookmarks =
                     td $ toHtml $ showTime $ bookmarkModified bookmark
 
 bookmarkView :: Show i => i -> Bookmark -> [Tag] -> Html
-bookmarkView id bookmark tags =
+bookmarkView id bookmark tags = mkSite $
     div $ do
         h3 $ toHtml $ bookmarkTitle bookmark
         table $ do
@@ -73,7 +73,7 @@ bookmarkAddForm = BookmarkInput
     <*> "tags" .: text Nothing
 
 bookmarkAddView :: View Html -> Text -> Html
-bookmarkAddView view path =
+bookmarkAddView view path = mkSite $
     div $ do
         form view path $ do
             label "title" view "Title: "
