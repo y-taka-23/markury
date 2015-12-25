@@ -5,31 +5,31 @@ import Web.Markury.Model.DB
 import Web.Markury.Model.Input
 import Web.Markury.View.CommonView
 
-import Prelude hiding ( head, div )
-import Text.Blaze.XHtml5 hiding ( Tag, text, label, form )
-import Text.Blaze.XHtml5.Attributes ( href )
-import Control.Monad
+import Control.Monad ( forM_ )
 import Data.Text hiding ( head )
+import Prelude hiding ( head, div )
+import Text.Blaze.XHtml5 hiding ( form, label, text )
+import Text.Blaze.XHtml5.Attributes hiding ( form, label )
 import Text.Digestive
 import Text.Digestive.Blaze.Html5
 
 userListView :: [User] -> Html
 userListView users = mkSite $
-    div $ do
-        h3 "Users"
-        table $ do
-            thead $ do
-                th "Email"
-                th "Password"
-                th "Created"
-                th "Modified"
-                th "Actions"
-            tbody $ forM_ users $ \user -> do
-                tr $ do
-                    td $ toHtml $ userEmail user
-                    td $ toHtml $ userPassword user
-                    td $ toHtml $ showTime $ userCreated user
-                    td $ toHtml $ showTime $ userModified user
+    table ! class_ "mdl-data-table mdl-js-data-table" $ do
+        thead $ do
+            tr $ do
+                th ! class_ "mdl-data-table__cell--non-numeric" $ "Email"
+                th ! class_ "mdl-data-table__cell--non-numeric" $ "Password"
+                th ! class_ "mdl-data-table__cell--non-numeric" $ "Created"
+                th ! class_ "mdl-data-table__cell--non-numeric" $ "Modified"
+                th ! class_ "mdl-data-table__cell--non-numeric" $ "Actions"
+        tbody $ forM_ users $ \user -> do
+            tr $ do
+                td ! class_ "mdl-data-table__cell--non-numeric" $ toHtml $ userEmail user
+                td ! class_ "mdl-data-table__cell--non-numeric" $ toHtml $ userPassword user
+                td ! class_ "mdl-data-table__cell--non-numeric" $ toHtml $ showTime $ userCreated user
+                td ! class_ "mdl-data-table__cell--non-numeric" $ toHtml $ showTime $ userModified user
+                td ! class_ "mdl-data-table__cell--non-numeric" $ ""
 
 userView :: Show i => i -> User -> Html
 userView id user = mkSite $

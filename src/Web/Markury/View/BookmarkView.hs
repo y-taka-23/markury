@@ -5,29 +5,29 @@ import Web.Markury.Model.DB
 import Web.Markury.Model.Input
 import Web.Markury.View.CommonView
 
-import Prelude hiding ( head, div )
-import Text.Blaze.XHtml5 hiding ( Tag, text, label, form )
-import Text.Blaze.XHtml5.Attributes ( href )
-import Control.Monad
+import Control.Monad ( forM_ )
 import Data.Text hiding ( head )
+import Prelude hiding ( head, div )
+import Text.Blaze.XHtml5 hiding ( Tag, form, label, text )
+import Text.Blaze.XHtml5.Attributes hiding ( form, label )
 import Text.Digestive
 import Text.Digestive.Blaze.Html5
 
 bookmarkListView :: [Bookmark] -> Html
 bookmarkListView bookmarks = mkSite $
-    div $ do
-        h3 "Bookmarks"
-        table $ do
-            thead $ do
-                th "Title"
-                th "Created"
-                th "Modified"
-                th "Actions"
-            tbody $ forM_ bookmarks $ \bookmark -> do
-                tr $ do
-                    td $ toHtml $ bookmarkTitle bookmark
-                    td $ toHtml $ showTime $ bookmarkCreated bookmark
-                    td $ toHtml $ showTime $ bookmarkModified bookmark
+    table ! class_ "mdl-data-table mdl-js-data-table" $ do
+        thead $ do
+            tr $ do
+                th ! class_ "mdl-data-table__cell--non-numeric" $ "Title"
+                th ! class_ "mdl-data-table__cell--non-numeric" $ "Create"
+                th ! class_ "mdl-data-table__cell--non-numeric" $ "Modified"
+                th ! class_ "mdl-data-table__cell--non-numeric" $ "Actions"
+        tbody $ forM_ bookmarks $ \bookmark -> do
+            tr $ do
+                td ! class_ "mdl-data-table__cell--non-numeric" $ toHtml $ bookmarkTitle bookmark
+                td ! class_ "mdl-data-table__cell--non-numeric" $ toHtml $ showTime $ bookmarkCreated bookmark
+                td ! class_ "mdl-data-table__cell--non-numeric" $ toHtml $ showTime $ bookmarkModified bookmark
+                td ! class_ "mdl-data-table__cell--non-numeric" $ ""
 
 bookmarkView :: Show i => i -> Bookmark -> [Tag] -> Html
 bookmarkView id bookmark tags = mkSite $

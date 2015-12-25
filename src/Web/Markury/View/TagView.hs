@@ -5,29 +5,29 @@ import Web.Markury.Model.DB
 import Web.Markury.Model.Input
 import Web.Markury.View.CommonView
 
-import Prelude hiding ( head, div )
-import Text.Blaze.XHtml5 hiding ( Tag, text, label, form )
-import Text.Blaze.XHtml5.Attributes ( href )
-import Control.Monad
+import Control.Monad ( forM_ )
 import Data.Text hiding ( head )
+import Prelude hiding ( head, div )
+import Text.Blaze.XHtml5 hiding ( Tag, form, label, text )
+import Text.Blaze.XHtml5.Attributes hiding ( form, label )
 import Text.Digestive
 import Text.Digestive.Blaze.Html5
 
 tagListView :: [Tag] -> Html
 tagListView tags = mkSite $
-    div $ do
-        h3 "Tags"
-        table $ do
-            thead $ do
-                th "Title"
-                th "Created"
-                th "Modified"
-                th "Actions"
-            tbody $ forM_ tags $ \tag -> do
-                tr $ do
-                    td $ toHtml $ tagTitle tag
-                    td $ toHtml $ showTime $ tagCreated tag
-                    td $ toHtml $ showTime $ tagModified tag
+    table ! class_ "mdl-data-table mdl-js-data-table" $ do
+        thead $ do
+            tr $ do
+                th ! class_ "mdl-data-table__cell--non-numeric" $ "Title"
+                th ! class_ "mdl-data-table__cell--non-numeric" $ "Create"
+                th ! class_ "mdl-data-table__cell--non-numeric" $ "Modified"
+                th ! class_ "mdl-data-table__cell--non-numeric" $ "Actions"
+        tbody $ forM_ tags $ \tag -> do
+            tr $ do
+                td ! class_ "mdl-data-table__cell--non-numeric" $ toHtml $ tagTitle tag
+                td ! class_ "mdl-data-table__cell--non-numeric" $ toHtml $ showTime $ tagCreated tag
+                td ! class_ "mdl-data-table__cell--non-numeric" $ toHtml $ showTime $ tagModified tag
+                td ! class_ "mdl-data-table__cell--non-numeric" $ ""
 
 tagView :: Show i => i -> Tag -> [Bookmark] -> Html
 tagView id tag bookmarks = mkSite $
