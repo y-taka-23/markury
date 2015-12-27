@@ -32,5 +32,7 @@ BookmarkTag
     tagId TagId
     UniqueBookmarkTag bookmarkId tagId
 Session
-    userId UserId
+    spockSessionId Text
+    userEmail Text
+    UniqueSpockSessionId spockSessionId
 |]

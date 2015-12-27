@@ -17,6 +17,7 @@ library
   hs-source-dirs:      src
   exposed-modules:     Web.Markury
                      , Web.Markury.Action.BookmarkAction
+                     , Web.Markury.Action.LoginAction
                      , Web.Markury.Action.TagAction
                      , Web.Markury.Action.UserAction
                      , Web.Markury.Action.Util
@@ -24,6 +25,7 @@ library
                      , Web.Markury.Model.Input
                      , Web.Markury.View.BookmarkView
                      , Web.Markury.View.CommonView
+                     , Web.Markury.View.LoginView
                      , Web.Markury.View.TagView
                      , Web.Markury.View.UserView
   build-depends:       base

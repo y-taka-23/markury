@@ -17,3 +17,8 @@ data UserInput = UserInput
 data TagInput = TagInput
     { tagInputTitle :: Text
     }
+
+data LoginInput = LoginInput
+    { loginInputEmail :: Text
+    , loginInputPassword :: Text
+    }

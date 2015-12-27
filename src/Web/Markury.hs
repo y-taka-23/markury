@@ -3,6 +3,7 @@
 module Web.Markury where
 
 import Web.Markury.Action.BookmarkAction
+import Web.Markury.Action.LoginAction
 import Web.Markury.Action.TagAction
 import Web.Markury.Action.UserAction
 import Web.Markury.Model.DB
