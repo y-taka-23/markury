@@ -41,7 +41,7 @@ addUserAction = do
             renderBlaze $ userAddView view "/users/add"
         (_, Just userInput) -> do
             let email = userInputEmail userInput
-            let password = userInputEmail userInput
+            let password = userInputPassword userInput
             now <- liftIO getCurrentTime
             _ <- runSql $ P.insert $ User email password now now
             redirect "/users"
