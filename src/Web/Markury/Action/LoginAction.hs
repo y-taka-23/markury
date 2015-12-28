@@ -34,7 +34,7 @@ checkSession = do
     mSession <- runSql $ P.getBy $ UniqueSpockSessionId sessionId
     case mSession of
         Nothing -> redirect "/login"
-        Just _ -> redirect "/bookmarks"
+        Just _ -> return ()
 
 createSession :: T.Text -> ActionT (WebStateM SqlBackend sess st) ()
 createSession email = do
