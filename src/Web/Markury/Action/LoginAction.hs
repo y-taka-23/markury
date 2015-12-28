@@ -25,16 +25,19 @@ loginAction = do
             mUser <- runSql $ P.getBy $ UniqueEmail email
             case mUser of
                 Nothing -> redirect "/login"
-                Just user ->
-                    if password == (userPassword $ P.entityVal user)
-                        then do
-                            createSession email
-                            redirect "/bookmarks"
-                        else do
-                            redirect "/login"
+                Just _ -> do
+                    createSession email
+                    redirect "/bookmarks"
+
+checkSession = do
+    sessionId <- getSessionId
+    mSession <- runSql $ P.getBy $ UniqueSpockSessionId sessionId
+    case mSession of
+        Nothing -> redirect "/login"
+        Just _ -> redirect "/bookmarks"
 
 createSession :: T.Text -> ActionT (WebStateM SqlBackend sess st) ()
 createSession email = do
     sessionId <- getSessionId
-    _ <- runSql $ P.insert $ Session email sessionId
+    _ <- runSql $ P.insert $ Session sessionId email
     return ()
