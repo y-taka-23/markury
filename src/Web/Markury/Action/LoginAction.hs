@@ -29,6 +29,7 @@ loginAction = do
                     createSession email
                     redirect "/bookmarks"
 
+checkSession :: ActionT (WebStateM SqlBackend sess st) ()
 checkSession = do
     sessionId <- getSessionId
     mSession <- runSql $ P.getBy $ UniqueSpockSessionId sessionId
