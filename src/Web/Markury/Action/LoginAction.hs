@@ -25,9 +25,13 @@ loginAction = do
             mUser <- runSql $ P.getBy $ UniqueEmail email
             case mUser of
                 Nothing -> redirect "/login"
-                Just _ -> do
-                    createSession email
-                    redirect "/bookmarks"
+                Just user -> do
+                    if authPassword (userPassword $ P.entityVal user) password
+                        then do
+                            createSession email
+                            redirect "/bookmarks"
+                        else do
+                            redirect "/login"
 
 checkSession :: ActionT (WebStateM SqlBackend sess st) ()
 checkSession = do
@@ -42,3 +46,6 @@ createSession email = do
     sessionId <- getSessionId
     _ <- runSql $ P.insert $ Session sessionId email
     return ()
+
+authPassword :: T.Text -> T.Text -> Bool
+authPassword = (==)
