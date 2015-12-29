@@ -33,6 +33,11 @@ loginAction = do
                         else do
                             redirect "/login"
 
+logoutAction :: ActionT (WebStateM SqlBackend sess st) b
+logoutAction = do
+    killSession
+    redirect "/bookmarks"
+
 checkSession :: ActionT (WebStateM SqlBackend sess st) ()
 checkSession = do
     sessionId <- getSessionId
@@ -45,6 +50,12 @@ createSession :: T.Text -> ActionT (WebStateM SqlBackend sess st) ()
 createSession email = do
     sessionId <- getSessionId
     _ <- runSql $ P.insert $ Session sessionId email
+    return ()
+
+killSession :: ActionT (WebStateM SqlBackend sess st) ()
+killSession = do
+    sessionId <- getSessionId
+    _ <- runSql $ P.deleteWhere [SessionSpockSessionId P.==. sessionId]
     return ()
 
 authPassword :: T.Text -> T.Text -> Bool

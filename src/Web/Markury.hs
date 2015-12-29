@@ -20,6 +20,7 @@ runMarkury = do
     runNoLoggingT $ runSqlPool (runMigration migrateAll) pool
     runSpock 8080 $ spock (defaultSpockCfg Nothing (PCPool pool) Nothing) $ do
         getpost "login" $ loginAction
+        get "logout" $ logoutAction
         subcomponent "bookmarks" $ do
             get root allBookmarksAction
             get ("view" <//> var) viewBookmarkAction
@@ -33,7 +34,7 @@ runMarkury = do
             get root allUsersAction
             get ("view" <//> var) viewUserAction
             getpost "add" $ do
-                checkSession
+--                checkSession
                 addUserAction
             getpost ("delete" <//> var) $ \id -> do
                 checkSession
